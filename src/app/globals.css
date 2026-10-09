@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. One light theme (page theme lock), one violet accent taken
+  from the brand mark, cool neutrals. Radius rule: pills for interactive
+  controls, 2rem shells with a concentric inner core for cards.
+*/
+:root {
+  --ink: #0b1230;
+  --ink-soft: #232b52;
+  --paper: #f5f5fa;
+  --surface: #ffffff;
+  --line: #e2e1ec;
+  --muted: #565b78;
+  --accent: #5a2cf5;
+  --accent-strong: #4516d6;
+  --accent-tint: #efeaff;
+  --success: #17684a;
+  --danger: #b3261e;
+  --ease-heavy: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-tint: var(--accent-tint);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --shadow-soft: 0 24px 60px -28px rgb(11 18 48 / 0.28);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Scroll reveal: transform and opacity only, disabled for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.8s var(--ease-heavy),
+      transform 0.8s var(--ease-heavy);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Shingle pattern used as an honest, photo-free hero visual. */
+.shingles {
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(circle at 50% 100%, transparent 58%, rgb(255 255 255 / 0.07) 59%, rgb(255 255 255 / 0.07) 61%, transparent 62%),
+    linear-gradient(180deg, rgb(90 44 245 / 0.18), transparent 60%);
+  background-size: 56px 32px, 100% 100%;
+}
+
+/* Native accordion polish */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-chevron {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
