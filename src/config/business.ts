@@ -5,6 +5,19 @@
  * (expertsnanoplus.com) and has NOT been confirmed for the new brand.
  * Confirm each one before the site goes live. See docs/PENDING-INFO.md.
  */
+const DEFAULT_SITE_URL = "https://expertsnanoplus.com";
+
+/** An empty or malformed env value (common on hosting dashboards) must never break the build. */
+function resolveSiteUrl(raw: string | undefined) {
+  const value = raw?.trim();
+  if (!value) return DEFAULT_SITE_URL;
+  try {
+    return new URL(value.startsWith("http") ? value : `https://${value}`).origin;
+  } catch {
+    return DEFAULT_SITE_URL;
+  }
+}
+
 export const business = {
   legalName: "Les Experts Nano Protection Toitures",
   /** Name shown in the interface. */
@@ -12,7 +25,7 @@ export const business = {
   shortName: "Nano Protection",
   tagline: "Préservation de toiture au Québec",
 
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://expertsnanoplus.com",
+  siteUrl: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
 
   phone: { display: "438 900-4886", href: "+14389004886", verify: true },
   email: { value: "service@expertsnanoplus.com", verify: true },
