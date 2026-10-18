@@ -74,14 +74,24 @@ export function breadcrumbJsonLd(locale: Locale, items: { name: string; path: st
 }
 
 export function organizationJsonLd(locale: Locale) {
-  const site = getDict(locale).site;
+  const dict = getDict(locale);
+  const site = dict.site;
   const areas = site.regions.map((r) => ({ "@type": "AdministrativeArea", name: r.name }));
+  const hours = {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: business.openingHours.days,
+    opens: business.openingHours.opens,
+    closes: business.openingHours.closes,
+  };
+  // Profile URLs the owner actually filled in. They tie the site to the business profile.
+  const sameAs = [...Object.values(business.socials), business.googleMapsUrl].filter(Boolean);
 
   return {
     "@context": "https://schema.org",
     "@type": "RoofingContractor",
     "@id": absoluteUrl("/#organization"),
     name: business.legalName,
+    legalName: business.legalName,
     url: business.siteUrl,
     telephone: business.phone.href,
     email: business.email.value,
@@ -90,14 +100,32 @@ export function organizationJsonLd(locale: Locale) {
     description: site.orgDescription,
     knowsLanguage: ["fr-CA", "en-CA"],
     areaServed: areas,
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: business.openingHours.days,
-        opens: business.openingHours.opens,
-        closes: business.openingHours.closes,
+    openingHoursSpecification: [hours],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: business.phone.href,
+      email: business.email.value,
+      areaServed: "CA-QC",
+      availableLanguage: ["French", "English"],
+      hoursAvailable: hours,
+    },
+    brand: { "@type": "Brand", name: "GoNano" },
+    makesOffer: dict.content.services.items.map((s) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: s.name,
+        description: s.summary,
+        url: absoluteUrl(localePath(locale, `/nos-traitements/${s.slug}`)),
       },
-    ],
+    })),
+    ...(sameAs.length ? { sameAs } : {}),
+    ...(business.googleMapsUrl ? { hasMap: business.googleMapsUrl } : {}),
+    // The licence number is published only once it has been verified.
+    ...(!business.rbq.verify
+      ? { identifier: { "@type": "PropertyValue", propertyID: "RBQ", value: business.rbq.number } }
+      : {}),
     ...(business.address
       ? {
           address: {

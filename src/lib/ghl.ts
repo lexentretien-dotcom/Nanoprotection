@@ -42,12 +42,33 @@ function noteBody(lead: Lead) {
   const interestLabels = getDict("fr").ui.form.interests;
   const lines = [
     `Langue du visiteur: ${lead.locale === "en" ? "anglais" : "français"}`,
-    `Source: formulaire ${lead.source === "assessment" ? "d'évaluation de toiture" : "de contact"}`,
+    `Source: ${
+      lead.source === "assessment"
+        ? "formulaire d'évaluation de toiture"
+        : lead.source === "widget"
+          ? "widget de soumission de la page /gohighlevel"
+          : "formulaire de contact"
+    }`,
     `Intérêt: ${interestLabels[lead.interest]}`,
     `Contact préféré: ${lead.contactMethod}`,
     `Code postal: ${lead.postalCode}${lead.city ? ` (${lead.city})` : ""}`,
     `Infolettre/marketing: ${lead.marketingConsent ? "oui (consentement exprès)" : "non"}`,
   ];
+  if (lead.source === "widget") {
+    lines.push(
+      `Service recherché: ${lead.service ?? "non précisé"}`,
+      `Secteur: ${
+        lead.coverage === "verified"
+          ? "dans une zone desservie (code postal reconnu)"
+          : "À CONFIRMER par l'équipe (couverture non vérifiée automatiquement)"
+      }`,
+      `Préférence de rendez-vous (NON confirmée, aucune réservation faite): ${
+        [lead.preferredDay === "asap" ? "dès que possible" : lead.preferredDay, lead.preferredWindow]
+          .filter(Boolean)
+          .join(", ") || "aucune"
+      }`,
+    );
+  }
   if (lead.message) lines.push(`Message: ${lead.message}`);
   if (lead.assessment) {
     lines.push("", "Réponses à l'évaluation (indicatif seulement, pas un diagnostic):");
@@ -67,9 +88,12 @@ export async function sendLeadToGhl(lead: Lead) {
   const tags = [
     "site-web",
     `langue-${lead.locale}`,
-    lead.source === "assessment" ? "evaluation-toiture" : "contact",
+    lead.source === "assessment" ? "evaluation-toiture" : lead.source === "widget" ? "widget-soumission" : "contact",
     `interet-${lead.interest}`,
   ];
+  if (lead.source === "widget") {
+    tags.push(lead.coverage === "verified" ? "secteur-verifie" : "secteur-a-confirmer");
+  }
   if (lead.marketingConsent) tags.push("consentement-marketing");
 
   const upsert = await ghl("/contacts/upsert", {

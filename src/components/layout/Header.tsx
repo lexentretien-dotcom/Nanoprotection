@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { List, X } from "@phosphor-icons/react";
+import { CaretDown, List, X } from "@phosphor-icons/react";
 import { Brand } from "./Brand";
 import { ButtonLink } from "@/components/ui/Button";
 import { business } from "@/config/business";
 import { useI18n } from "@/i18n/provider";
 import { localePath, parsePathname, switchPath } from "@/i18n/config";
+import type { NavItem } from "@/i18n/fr/ui";
+
+const linkBase =
+  "inline-flex min-h-11 items-center whitespace-nowrap text-[14.5px] font-medium transition-colors duration-300";
 
 export function Header() {
   const { locale, ui } = useI18n();
@@ -43,6 +47,9 @@ export function Header() {
     };
   }, [open]);
 
+  const isActive = (item: NavItem) =>
+    currentPath.startsWith(item.href) || Boolean(item.children?.some((c) => currentPath.startsWith(c.href)));
+
   const langLink = (
     <Link
       href={switchHref}
@@ -69,15 +76,23 @@ export function Header() {
 
           <nav aria-label={ui.nav.main} className="hidden xl:block">
             <ul className="flex items-center gap-1">
-              {ui.nav.items.map((item) => {
-                const active = currentPath.startsWith(item.href);
-                return (
+              {ui.nav.items.map((item) =>
+                item.children?.length ? (
+                  <DropdownItem
+                    key={item.href}
+                    item={item}
+                    active={isActive(item)}
+                    currentPath={currentPath}
+                    locale={locale}
+                    moreLabel={ui.nav.moreLabel}
+                  />
+                ) : (
                   <li key={item.href}>
                     <Link
                       href={localePath(locale, item.href)}
-                      aria-current={active ? "page" : undefined}
-                      className={`inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-3.5 text-[14.5px] font-medium transition-colors duration-300 ${
-                        active
+                      aria-current={isActive(item) ? "page" : undefined}
+                      className={`${linkBase} rounded-full px-3.5 ${
+                        isActive(item)
                           ? "bg-ink/[0.06] text-ink"
                           : "text-ink-soft hover:bg-ink/[0.05] hover:text-ink"
                       }`}
@@ -85,8 +100,8 @@ export function Header() {
                       {item.label}
                     </Link>
                   </li>
-                );
-              })}
+                ),
+              )}
             </ul>
           </nav>
 
@@ -122,20 +137,37 @@ export function Header() {
       >
         <nav aria-label={ui.nav.mobile}>
           <ul className="flex flex-col">
-            {[...ui.nav.items, ...ui.nav.extra].map((item, i) => (
-              <li
-                key={item.href}
-                className="menu-item border-b border-ink/[0.07]"
-                style={{ ["--i" as string]: i }}
-              >
-                <Link
-                  href={localePath(locale, item.href)}
-                  className="block py-4 font-display text-2xl font-semibold tracking-tight"
+            {[...ui.nav.items, ...ui.nav.extra].map((item, i) => {
+              const sub = (item as NavItem).children?.filter((c) => c.href !== item.href) ?? [];
+              return (
+                <li
+                  key={item.href}
+                  className="menu-item border-b border-ink/[0.07]"
+                  style={{ ["--i" as string]: i }}
                 >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+                  <Link
+                    href={localePath(locale, item.href)}
+                    className="block py-4 font-display text-2xl font-semibold tracking-tight"
+                  >
+                    {item.label}
+                  </Link>
+                  {sub.length > 0 && (
+                    <ul className="-mt-1 mb-3 ml-4 border-l border-ink/10 pl-4">
+                      {sub.map((c) => (
+                        <li key={c.href}>
+                          <Link
+                            href={localePath(locale, c.href)}
+                            className="block py-2.5 font-display text-xl font-medium tracking-tight text-ink-soft"
+                          >
+                            {c.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <div className="mt-8 flex flex-col gap-3">
@@ -153,5 +185,114 @@ export function Header() {
         </div>
       </div>
     </>
+  );
+}
+
+/**
+ * Desktop drop-down: the label is still a normal link; a separate chevron button
+ * opens the sub-menu (disclosure pattern). It also opens on hover and while keyboard
+ * focus is inside, closes on Escape and on an outside click.
+ */
+function DropdownItem({
+  item,
+  active,
+  currentPath,
+  locale,
+  moreLabel,
+}: {
+  item: NavItem;
+  active: boolean;
+  currentPath: string;
+  locale: "fr" | "en";
+  moreLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const openedByHover = useRef(false);
+  const ref = useRef<HTMLLIElement>(null);
+  const id = `sub-${item.href.replace(/\W/g, "")}`;
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <li
+      ref={ref}
+      className="dropdown relative"
+      data-open={open}
+      onMouseEnter={() => {
+        openedByHover.current = true;
+        setOpen(true);
+      }}
+      onMouseLeave={() => {
+        openedByHover.current = false;
+        setOpen(false);
+      }}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!ref.current?.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
+    >
+      <div
+        className={`flex items-center rounded-full ${
+          active ? "bg-ink/[0.06] text-ink" : "text-ink-soft hover:bg-ink/[0.05] hover:text-ink"
+        }`}
+      >
+        <Link
+          href={localePath(locale, item.href)}
+          aria-current={active ? "page" : undefined}
+          className={`${linkBase} rounded-l-full pl-3.5 pr-1`}
+        >
+          {item.label}
+        </Link>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={id}
+          aria-label={`${moreLabel} ${item.label}`}
+          onClick={() => {
+            // A click that follows a hover keeps the menu open; otherwise (touch, keyboard) it toggles.
+            if (openedByHover.current) openedByHover.current = false;
+            else setOpen((v) => !v);
+          }}
+          className="flex h-11 w-9 items-center justify-center rounded-r-full"
+        >
+          <CaretDown
+            size={14}
+            weight="bold"
+            aria-hidden
+            className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+      </div>
+      <ul
+        id={id}
+        className="dropdown-panel absolute left-0 top-full z-50 mt-1 min-w-[12rem] rounded-2xl bg-surface p-1.5 shadow-[var(--shadow-soft)] ring-1 ring-ink/10"
+      >
+        {item.children?.map((c) => (
+          <li key={c.href}>
+            <Link
+              href={localePath(locale, c.href)}
+              aria-current={currentPath === c.href ? "page" : undefined}
+              className={`flex min-h-11 items-center rounded-xl px-3.5 text-[14.5px] font-medium transition-colors ${
+                currentPath === c.href ? "bg-accent-tint text-accent-strong" : "text-ink-soft hover:bg-ink/[0.05] hover:text-ink"
+              }`}
+            >
+              {c.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </li>
   );
 }

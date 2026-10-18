@@ -2,6 +2,7 @@ import { Container, PageHeader, Section, SectionTitle } from "@/components/ui/Pa
 import { Bezel } from "@/components/ui/Bezel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Closing } from "@/components/sections/Closing";
+import { TvBlock } from "@/components/sections/TvBlock";
 import { business } from "@/config/business";
 import { getDict } from "@/i18n/dictionaries";
 import { resolveLocale } from "@/i18n/server";
@@ -43,6 +44,8 @@ export default async function AboutPage({ params }: Props) {
           ))}
         </ul>
       </Section>
+
+      <TvBlock locale={locale} />
 
       <Container className="pb-20 sm:pb-28">
         <Bezel coreClassName="p-8 sm:p-12">

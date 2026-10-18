@@ -121,6 +121,19 @@ export const pages: Pages = {
     relationValue: "Authorized reseller and installer of GoNano products",
     rbq: "RBQ licence",
     regions: "Regions served",
+    tv: {
+      badge: "Seen on TV",
+      showName: "Dragons' Den",
+      title: "A technology seen on television.",
+      text: "GoNano® presented its nanotechnology on Dragons' Den (known in French as Dans l'œil du dragon). It is the protection technology we apply to your roof.",
+      bullets: [
+        "GoNano® technology presented on Dragons' Den",
+        "More than 50,000 roofs treated in North America",
+        "More than one million dollars invested in testing (impact, wind, hail)",
+      ],
+      note: "It is the GoNano® product, as a technology, that was presented on the show. Les Experts Nano Protection Toitures is an authorized installer of it. Data from GoNano.",
+      imageAlt: "GoNano's presentation on Dragons' Den",
+    },
   },
 
   areas: {

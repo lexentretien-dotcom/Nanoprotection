@@ -18,7 +18,13 @@ function Block({ title, items, ordered = false }: { title: string; items: string
 }
 
 /** Condensed, non-contractual summary of the manufacturer's limited warranty. */
-export function WarrantySummary({ data }: { data: Products["warranty"] }) {
+export function WarrantySummary({
+  data,
+  locale,
+}: {
+  data: Products["warranty"];
+  locale: "fr" | "en";
+}) {
   return (
     <div>
       <div className="grid gap-5 lg:grid-cols-2">
@@ -64,7 +70,7 @@ export function WarrantySummary({ data }: { data: Products["warranty"] }) {
       </div>
       <p className="mt-4 text-sm text-muted">{data.source}</p>
       <a
-        href={business.assets.warrantyPdf}
+        href={business.assets.warrantyPdf[locale]}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-surface px-5 text-[15px] font-semibold text-ink ring-1 ring-ink/15 transition-[transform] hover:ring-ink/40 active:scale-[0.97] active:duration-75"

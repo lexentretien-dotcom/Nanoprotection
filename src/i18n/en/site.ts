@@ -56,7 +56,17 @@ export const site: Site = {
         text: "Usually completed in a single day for a typical home, without tearing off your roof.",
       },
     ],
-    note: "Depending on roof size, required preparation and weather.",
+  },
+
+  stats: {
+    items: [
+      { prefix: "", value: "50,000+", label: "roofs treated in North America" },
+      { prefix: "Up to", value: "15 years", label: "of written manufacturer warranty" },
+      { prefix: "", value: "1 day", label: "to apply, with no tear-off" },
+    ],
+    source:
+      "Data from GoNano. Limited manufacturer warranty, depending on the product and the roof's condition. Application usually takes one day for a typical home.",
+    warrantyLink: "See the warranty details",
   },
 
   ctaBand: {
@@ -91,7 +101,16 @@ export const site: Site = {
       contractor: "GoNano authorized reseller and installer",
       rbq: "Régie du bâtiment du Québec",
     },
-    officialWarranty: "Official warranty (PDF, in French)",
+    officialWarranty: "Official warranty (PDF)",
+    reseller: ["Authorized reseller &", "installer"],
+    followUs: "Follow us",
+    socials: {
+      facebook: "Facebook",
+      google: "Google (business profile)",
+      instagram: "Instagram",
+      linkedin: "LinkedIn",
+    },
+    socialPlaceholder: "link to be configured",
     toConfirm: "to be confirmed",
     rights: "© {year} Les Experts Nano Protection Toitures. All rights reserved.",
     legal: [
@@ -100,8 +119,6 @@ export const site: Site = {
       { href: "/temoins", label: "Cookies" },
       { href: "/mentions-legales", label: "Legal notice" },
     ],
-    disclaimer:
-      "GoNano is a trademark of its owner. We are an authorized installer of these products and are not the manufacturer. Information on this site is general in nature and does not replace an on-site inspection.",
   },
 
 

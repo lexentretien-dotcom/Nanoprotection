@@ -54,7 +54,17 @@
         text: "Généralement complétée en une journée pour une maison typique, sans arracher votre toiture.",
       },
     ],
-    note: "Selon la superficie, la préparation requise et la météo.",
+  },
+
+  stats: {
+    items: [
+      { prefix: "", value: "50 000+", label: "toitures traitées en Amérique du Nord" },
+      { prefix: "Jusqu'à", value: "15 ans", label: "de garantie fabricant écrite" },
+      { prefix: "", value: "1 journée", label: "d'application, sans arrachage" },
+    ],
+    source:
+      "Données de GoNano. Garantie limitée du fabricant, selon le produit et l'état de la toiture. Application généralement en une journée pour une maison typique.",
+    warrantyLink: "Voir le détail de la garantie",
   },
 
   ctaBand: {
@@ -90,6 +100,15 @@
       rbq: "Régie du bâtiment du Québec",
     },
     officialWarranty: "Garantie officielle (PDF)",
+    reseller: ["Revendeur et", "installateur autorisé"],
+    followUs: "Nous suivre",
+    socials: {
+      facebook: "Facebook",
+      google: "Google (fiche d'entreprise)",
+      instagram: "Instagram",
+      linkedin: "LinkedIn",
+    },
+    socialPlaceholder: "lien à configurer",
     toConfirm: "à confirmer",
     rights: "© {year} Les Experts Nano Protection Toitures. Tous droits réservés.",
     legal: [
@@ -98,8 +117,6 @@
       { href: "/temoins", label: "Témoins" },
       { href: "/mentions-legales", label: "Mentions légales" },
     ],
-    disclaimer:
-      "GoNano est une marque de son propriétaire. Nous sommes installateur autorisé de ces produits et n'en sommes pas le fabricant. Les renseignements sur ce site sont de nature générale et ne remplacent pas une inspection sur place.",
   },
 
 

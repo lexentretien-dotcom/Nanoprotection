@@ -1,4 +1,4 @@
-import type { Ui } from "../fr/ui";
+import type { NavItem, Ui } from "../fr/ui";
 
 export const ui: Ui = {
   nav: {
@@ -7,9 +7,16 @@ export const ui: Ui = {
       { href: "/technologie-gonano", label: "Technology" },
       { href: "/nos-produits", label: "Products" },
       { href: "/realisations", label: "Projects" },
-      { href: "/blogue", label: "Blog" },
-      { href: "/a-propos", label: "About" },
-    ],
+      {
+        href: "/a-propos",
+        label: "About",
+        children: [
+          { href: "/a-propos", label: "About" },
+          { href: "/blogue", label: "Blog" },
+        ],
+      },
+    ] as NavItem[],
+    moreLabel: "Show the submenu of",
     extra: [
       { href: "/faq", label: "FAQ" },
       { href: "/contact", label: "Contact" },

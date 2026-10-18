@@ -5,6 +5,8 @@ export type TrackEvent =
   | "email_click"
   | "assessment_complete"
   | "estimator_interaction"
+  | "widget_coverage_check"
+  | "widget_service_selected"
   | "preferred_source_click";
 
 type DataLayerWindow = Window & { dataLayer?: unknown[] };

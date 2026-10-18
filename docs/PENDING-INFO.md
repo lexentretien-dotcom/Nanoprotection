@@ -68,3 +68,16 @@ Désigner la personne responsable des renseignements personnels. Confirmer la du
 3. Téléversement de photos dans les formulaires: non construit.
 4. **Seconde page d'accueil cachée (point 12 de votre liste): en attente de vos explications.**
 5. Autorisation de mise en ligne. Rien n'est publié ni remplacé sans votre accord explicite.
+
+## 7. V3: points à confirmer
+
+- **Liens de profils**: Facebook, Google, Instagram, LinkedIn et lien Google Maps (`src/config/business.ts`, `socials`, `googleMapsUrl`). Les icônes du pied de page s'affichent en pointillé (staging seulement) tant que l'URL est vide; elles alimentent aussi `sameAs` dans le balisage.
+- **Zones de service du widget**: préfixes postaux (FSA) à approuver, voir `docs/COVERAGE.md`. Tant que la liste est vide, le widget répond « à confirmer ».
+- **Fiche technique de Fortify**: la fiche fournie est publiée sous le nom « Shingle Saver ». Confirmer qu'il s'agit bien de NuRoof Fortify.
+- **« Jusqu'à 15 ans »** (bandeau de statistiques): la garantie officielle indique jusqu'à 20 ans (+5 ans grêle) pour Fortify Elite. Confirmer le chiffre voulu.
+- **« N'annule pas les garanties des autres fabricants »**: le texte publié reprend uniquement la clause de la garantie (art. 7). Pour une phrase plus forte, obtenir une déclaration écrite de GoNano.
+- **Écoresponsabilité**: Bio-Boost et Revive selon les fiches; Fortify est à base de solvant et n'est pas présenté comme écologique.
+- **Dragons' Den**: le texte dit seulement que la technologie GoNano a été présentée. Photo officielle facultative: `public/photos/dragons-den.jpg`.
+- **Options du widget** (béton/bois, membrane élastomère, réparation/remplacement): implémentées comme demandé; Wood Saver est discontinué et la réparation contredit le positionnement. À valider.
+- **Concrete Saver**: non inclus; recommandation dans le rapport final.
+- **Page `/gohighlevel`**: française seulement, non indexée, absente du sitemap.

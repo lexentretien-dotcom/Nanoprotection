@@ -44,6 +44,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     out.push(...entry(`/nos-traitements/${s.slug}`, locales, now, 0.8));
   }
 
+  // Individual product pages.
+  for (const p of getDict("fr").content.products.items) {
+    out.push(...entry(`/nos-produits/${p.slug}`, locales, now, 0.8));
+  }
+
   // Blog posts: list each language that has the post.
   const slugs = new Set(locales.flatMap((l) => getPosts(l).map((p) => p.slug)));
   for (const slug of slugs) {

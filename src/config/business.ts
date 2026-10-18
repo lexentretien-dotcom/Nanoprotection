@@ -26,7 +26,7 @@ export const business = {
   siteUrl: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
 
   phone: { display: "+1 (450) 328-9398", href: "+14503289398" },
-  email: { value: "Service@ExpertsNanoProtection.ca" },
+  email: { value: "service@Expertsnanoprotection.ca" },
 
   /** Open every day, 8:00 to 20:00. Used for structured data; the text shown is in the dictionaries. */
   openingHours: {
@@ -48,12 +48,50 @@ export const business = {
   /** Slugs only; names and details are in the dictionaries. Remove a region that is not served. */
   regions: ["rive-sud-montreal", "saguenay-lac-saint-jean", "sherbrooke"] as const,
 
+  /**
+   * Social profiles and the Google Business Profile. Paste the full URL of each
+   * profile. An empty URL hides the icon in production (the preview site shows a
+   * dimmed placeholder). These URLs are also published as `sameAs` in the
+   * structured data, which helps Google tie the website to the business profile.
+   */
+  socials: {
+    facebook: "",
+    google: "",
+    instagram: "",
+    linkedin: "",
+  },
+  /** Link to the Google Maps listing of the business profile (optional, used in structured data). */
+  googleMapsUrl: "",
+
   assets: {
-    warrantyPdf: "/docs/garantie-officielle-gonano.pdf",
+    /** Official limited warranty, one PDF per language. */
+    warrantyPdf: {
+      fr: "/brand/warranty/garantie-limitee-gonano-fr.pdf",
+      en: "/brand/warranty/gonano-limited-warranty-en.pdf",
+    },
     goNanoLogoDark: "/brand/gonano-logo-dark.png",
     goNanoLogoLight: "/brand/gonano-logo-light.png",
-    resellerBanner: "/brand/Reseller banner GoNano_Image.png",
-    rbqLogo: "/brand/rbq.webp",
+    rbqLogoLight: "/brand/rbq-light.png",
+    /** Manufacturer technical data sheets, per product and language. */
+    productSheets: {
+      "nuroof-fortify": {
+        fr: "/brand/product-sheets/fr/fortify-shingle-saver-fiche-technique.pdf",
+        en: "/brand/product-sheets/en/fortify-shingle-saver-technical-data-sheet.pdf",
+      },
+      "nuroof-revive": {
+        fr: "/brand/product-sheets/fr/revive-fiche-technique.pdf",
+        en: "/brand/product-sheets/en/revive-technical-data-sheet.pdf",
+      },
+      "nuroof-bio-boost": {
+        fr: "/brand/product-sheets/fr/bio-boost-fiche-technique.pdf",
+        en: "/brand/product-sheets/en/bio-boost-technical-data-sheet.pdf",
+      },
+    },
+    productImages: {
+      "nuroof-fortify": "/brand/products/fortify/fortify.png",
+      "nuroof-revive": "/brand/products/revive/revive.png",
+      "nuroof-bio-boost": "/brand/products/bio-boost/bio-boost.png",
+    },
   },
 
   /** Integrations, all optional and configured through environment variables. */
@@ -78,3 +116,4 @@ export const business = {
 } as const;
 
 export type RegionSlug = (typeof business.regions)[number];
+export type ProductSlug = keyof typeof business.assets.productSheets;

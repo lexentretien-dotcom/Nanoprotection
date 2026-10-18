@@ -36,7 +36,6 @@ export function TrustStrip({ locale }: { locale: Locale }) {
             );
           })}
         </ul>
-        <p className="mt-8 text-sm text-muted">{trust.note}</p>
       </Container>
     </section>
   );

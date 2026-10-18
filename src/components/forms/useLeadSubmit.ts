@@ -20,7 +20,11 @@ const initial: FormState = { status: "idle", message: "", fieldErrors: {}, fallb
  * Client-side validation (same zod schema as the server), submission, error
  * handling and redirect. Never reports success unless the server did.
  */
-export function useLeadSubmit(source: "contact" | "assessment") {
+export function useLeadSubmit(
+  source: "contact" | "assessment" | "widget",
+  options: { redirect?: boolean } = {},
+) {
+  const { redirect = true } = options;
   const router = useRouter();
   const { locale, ui } = useI18n();
   const errors = ui.form.errors;
@@ -81,7 +85,7 @@ export function useLeadSubmit(source: "contact" | "assessment") {
       const data = (await res.json()) as LeadResponse;
       if (data.ok) {
         track("quote_submit", { source });
-        router.push(localePath(locale, "/merci"));
+        if (redirect) router.push(localePath(locale, "/merci"));
         return true;
       }
       setState({

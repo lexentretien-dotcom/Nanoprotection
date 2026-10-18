@@ -3,6 +3,7 @@ import { Container, PageHeader } from "@/components/ui/Page";
 import { Bezel } from "@/components/ui/Bezel";
 import { ProjectGallery, type GalleryProject } from "@/components/sections/ProjectGallery";
 import { Closing } from "@/components/sections/Closing";
+import { StatsStrip } from "@/components/sections/StatsStrip";
 import { projects, testimonials } from "@/content/projects";
 import { getDict } from "@/i18n/dictionaries";
 import { resolveLocale } from "@/i18n/server";
@@ -45,6 +46,9 @@ export default async function ProjectsPage({ params }: Props) {
         intro={p.intro}
         crumbs={[{ name: getDict(locale).ui.nav.items[3].label, path: "/realisations" }]}
       />
+      {/* GoNano figures at the very top, as requested (no rating) */}
+      <StatsStrip locale={locale} link className="pt-12" />
+
       <Container className="py-20">
         {gallery.length > 0 ? (
           <ProjectGallery projects={gallery} />

@@ -194,6 +194,32 @@ p {
   }
 }
 
+/*
+  Desktop drop-down: same fade-and-rise as the mobile menu. Open state is
+  controlled by data-open (hover, focus, click; Escape and outside click close).
+*/
+.dropdown-panel {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.25s var(--ease-heavy),
+    transform 0.25s var(--ease-heavy),
+    visibility 0s linear 0.25s;
+}
+.dropdown[data-open="true"] .dropdown-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dropdown-panel {
+    transform: none;
+    transition: opacity 0.12s linear, visibility 0s linear 0.12s;
+  }
+}
+
 /* Blog article body (rendered from Markdown). */
 .prose-article {
   color: var(--ink-soft);

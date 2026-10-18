@@ -119,6 +119,19 @@ export const pages = {
     relationValue: "Revendeur et installateur autorisé des produits GoNano",
     rbq: "Licence RBQ",
     regions: "Régions desservies",
+    tv: {
+      badge: "Vu à la télévision",
+      showName: "Dans l'œil du dragon",
+      title: "Une technologie vue à la télévision.",
+      text: "GoNano® a présenté sa nanotechnologie à l'émission Dans l'œil du dragon. C'est la technologie de protection que nous appliquons sur votre toiture.",
+      bullets: [
+        "Technologie GoNano® présentée à Dans l'œil du dragon",
+        "Plus de 50 000 toitures traitées en Amérique du Nord",
+        "Plus d'un million de dollars investis en tests (impact, vent, grêle)",
+      ],
+      note: "C'est le produit GoNano® qui a été présenté à l'émission, à titre de technologie. Les Experts Nano Protection Toitures en sont un installateur autorisé. Données de GoNano.",
+      imageAlt: "Présentation de GoNano à l'émission Dans l'œil du dragon",
+    },
   },
 
   areas: {

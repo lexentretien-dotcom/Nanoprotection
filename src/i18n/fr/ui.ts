@@ -1,3 +1,10 @@
+export type NavItem = {
+  href: string;
+  label: string;
+  /** Sub-pages shown in a drop-down under this item. */
+  children?: { href: string; label: string }[];
+};
+
 /** Strings used by client components. Must stay serializable (no functions). */
 export const ui = {
   nav: {
@@ -6,9 +13,16 @@ export const ui = {
       { href: "/technologie-gonano", label: "Technologie" },
       { href: "/nos-produits", label: "Produits" },
       { href: "/realisations", label: "Réalisations" },
-      { href: "/blogue", label: "Blogue" },
-      { href: "/a-propos", label: "À propos" },
-    ],
+      {
+        href: "/a-propos",
+        label: "À propos",
+        children: [
+          { href: "/a-propos", label: "À propos" },
+          { href: "/blogue", label: "Blogue" },
+        ],
+      },
+    ] as NavItem[],
+    moreLabel: "Afficher le sous-menu de",
     extra: [
       { href: "/faq", label: "Questions fréquentes" },
       { href: "/contact", label: "Contact" },

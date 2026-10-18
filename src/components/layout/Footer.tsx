@@ -1,11 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FilePdf } from "@phosphor-icons/react/ssr";
+import { FacebookLogo, FilePdf, GoogleLogo, InstagramLogo, LinkedinLogo } from "@phosphor-icons/react/ssr";
 import { Brand } from "./Brand";
+import { buttonClasses } from "@/components/ui/Button";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { business } from "@/config/business";
 import { fmt, getDict } from "@/i18n/dictionaries";
 import { localePath, type Locale } from "@/i18n/config";
+
+const socialIcons = {
+  facebook: FacebookLogo,
+  google: GoogleLogo,
+  instagram: InstagramLogo,
+  linkedin: LinkedinLogo,
+} as const;
 
 export function Footer({ locale }: { locale: Locale }) {
   const dict = getDict(locale);
@@ -13,6 +21,11 @@ export function Footer({ locale }: { locale: Locale }) {
   const f = site.footer;
   const staging = !business.indexable;
   const showRbqNumber = staging || !business.rbq.verify;
+
+  // Production shows only the profiles that have a URL; the preview shows dimmed placeholders.
+  const socials = (Object.keys(socialIcons) as (keyof typeof socialIcons)[])
+    .map((key) => ({ key, url: business.socials[key] }))
+    .filter((s) => s.url || staging);
 
   return (
     <footer className="mt-24 bg-ink text-white">
@@ -38,6 +51,42 @@ export function Footer({ locale }: { locale: Locale }) {
               </TrackedLink>
               <p className="text-white/70">{site.hoursText}</p>
             </address>
+
+            {socials.length > 0 && (
+              <div className="mt-6">
+                <p className="sr-only">{f.followUs}</p>
+                <ul className="flex gap-2">
+                  {socials.map(({ key, url }) => {
+                    const Icon = socialIcons[key];
+                    const label = f.socials[key];
+                    return (
+                      <li key={key}>
+                        {url ? (
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer me"
+                            aria-label={label}
+                            className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 ring-1 ring-white/20 transition-[color,box-shadow,transform] duration-300 hover:text-white hover:ring-white/60 active:scale-95 active:duration-75"
+                          >
+                            <Icon size={20} weight="regular" aria-hidden />
+                          </a>
+                        ) : (
+                          <span
+                            title={`${label}: ${f.socialPlaceholder}`}
+                            aria-label={`${label}: ${f.socialPlaceholder}`}
+                            role="img"
+                            className="flex h-11 w-11 items-center justify-center rounded-full text-white/30 ring-1 ring-dashed ring-white/15"
+                          >
+                            <Icon size={20} weight="regular" aria-hidden />
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
 
           <FooterCol
@@ -69,55 +118,61 @@ export function Footer({ locale }: { locale: Locale }) {
           </div>
         </div>
 
-        {/* Licence and certifications */}
+        {/* Licence and certifications: clear logos on the dark footer, warranty button on the right */}
         <div className="mt-14 border-t border-white/10 pt-10">
           <h2 className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-white/70">
             {f.certifications}
           </h2>
-          <ul className="mt-6 flex flex-wrap items-end gap-x-8 gap-y-6">
-            <Cert caption={f.certs.gonano}>
-              <Image
-                src={business.assets.goNanoLogoDark}
-                alt={f.certAlt.gonano}
-                width={196}
-                height={56}
-                className="h-14 w-auto"
-              />
-            </Cert>
-            <Cert caption={f.certs.contractor}>
-              <Image
-                src={business.assets.resellerBanner}
-                alt={f.certAlt.contractor}
-                width={224}
-                height={56}
-                className="h-14 w-auto"
-              />
-            </Cert>
-            <Cert
-              caption={
-                showRbqNumber
-                  ? `${f.certs.rbq} ${business.rbq.number}${business.rbq.verify ? ` (${f.toConfirm})` : ""}`
-                  : f.certs.rbq
-              }
+          <div className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <ul className="flex flex-wrap items-end gap-x-10 gap-y-6">
+              <Cert caption={f.certs.gonano}>
+                <Image
+                  src={business.assets.goNanoLogoLight}
+                  alt={f.certAlt.gonano}
+                  width={168}
+                  height={48}
+                  className="h-12 w-auto"
+                />
+              </Cert>
+              <Cert caption={f.certs.contractor}>
+                <span
+                  role="img"
+                  aria-label={f.certAlt.contractor}
+                  className="flex h-12 items-center rounded-xl border border-white/30 px-4 font-display text-[11px] font-extrabold uppercase leading-[1.15] tracking-[0.1em] text-white"
+                >
+                  <span>
+                    {f.reseller[0]}
+                    <br />
+                    {f.reseller[1]}
+                  </span>
+                </span>
+              </Cert>
+              <Cert
+                caption={
+                  showRbqNumber
+                    ? `${f.certs.rbq} ${business.rbq.number}${business.rbq.verify ? ` (${f.toConfirm})` : ""}`
+                    : f.certs.rbq
+                }
+              >
+                <Image
+                  src={business.assets.rbqLogoLight}
+                  alt={f.certAlt.rbq}
+                  width={122}
+                  height={48}
+                  className="h-12 w-auto"
+                />
+              </Cert>
+            </ul>
+            <a
+              href={business.assets.warrantyPdf[locale]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonClasses("primary", "self-start lg:self-end")}
             >
-              <Image
-                src={business.assets.rbqLogo}
-                alt={f.certAlt.rbq}
-                width={140}
-                height={56}
-                className="h-14 w-auto"
-              />
-            </Cert>
-          </ul>
-          <a
-            href={business.assets.warrantyPdf}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full px-1 text-[15px] font-semibold text-white underline-offset-4 hover:underline"
-          >
-            <FilePdf size={22} weight="light" aria-hidden />
-            {f.officialWarranty}
-          </a>
+              <FilePdf size={20} weight="light" aria-hidden />
+              {f.officialWarranty}
+            </a>
+          </div>
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/70 md:flex-row md:items-center md:justify-between">
@@ -135,19 +190,16 @@ export function Footer({ locale }: { locale: Locale }) {
             ))}
           </ul>
         </div>
-        <p className="mt-6 max-w-3xl text-xs leading-relaxed text-white/60">{f.disclaimer}</p>
       </div>
     </footer>
   );
 }
 
-/** Each badge sits on a white tile so logos with dark artwork stay legible on the dark footer. */
+/** Logos sit directly on the footer (no white tile), with a small caption underneath. */
 function Cert({ caption, children }: { caption: string; children: React.ReactNode }) {
   return (
-    <li className="flex flex-col gap-2">
-      <span className="flex items-center rounded-2xl bg-white p-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.6)]">
-        {children}
-      </span>
+    <li className="flex flex-col gap-3">
+      <span className="flex h-12 items-center">{children}</span>
       <span className="max-w-[16rem] text-xs font-medium uppercase tracking-[0.08em] text-white/75">
         {caption}
       </span>

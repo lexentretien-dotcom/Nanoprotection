@@ -139,6 +139,23 @@ const services = {
   ] as ServiceItem[],
 };
 
+export type ProductDetail = {
+  slug: string;
+  metaTitle: string;
+  metaDescription: string;
+  imageAlt: string;
+  tagline: string;
+  intro: string;
+  features: { title: string; text: string }[];
+  specs: { label: string; value: string }[];
+  steps: string[];
+  applicationNote: string;
+  environment: { title: string; text: string; points: string[] };
+  /** Names used in the warranty table rows (products.warranty.rows[].product) */
+  warrantyProducts: string[];
+  sheetLabel: string;
+};
+
 export type ProductItem = {
   slug: string;
   name: string;
@@ -228,6 +245,185 @@ const products = {
         "Gain de durée de vie plus modeste. Ne s'applique pas à toutes les toitures et ne remplace pas les réparations nécessaires.",
     },
   ] as ProductItem[],
+
+  viewProduct: "Voir la fiche du produit",
+  cardImageAlt: "Bidon de {name}",
+  detail: {
+    back: "Tous les produits",
+    featuresTitle: "Caractéristiques",
+    specsTitle: "Fiche technique",
+    applicationTitle: "Application",
+    warrantyTitle: "Garantie du fabricant",
+    warrantyIntro:
+      "Périodes de couverture liées à ce produit, selon le score de santé de la toiture (RHS). Résumé non contractuel.",
+    warrantyMore: "Lire la garantie officielle (PDF)",
+    sheetCta: "Télécharger la fiche technique (PDF)",
+    sourceNote: "Source: fiche technique du fabricant GoNano.",
+    limitsTitle: "Ce que ce produit ne fait pas",
+    compareCta: "Comparer avec les autres produits",
+    ctaTitle: "Ce produit convient-il à votre toiture?",
+    ctaText: "Seule une inspection permet de le savoir. Nous recommandons le produit qui convient, pas le plus cher.",
+    backstopTitle: "Vos garanties existantes",
+    backstop:
+      "Un traitement peut soulever des questions chez le fabricant de vos bardeaux. C'est pourquoi la garantie de GoNano prévoit une clause de protection: si le fabricant de vos bardeaux refuse par écrit une réclamation parce que le traitement semble en être la cause, GoNano facilite sans frais le dépôt de la réclamation selon la garantie d'origine. GoNano n'assume pas de responsabilité financière au-delà de cette aide (garantie limitée, section 7). Si vous avez encore une garantie de bardeaux, nous la regardons avec vous avant les travaux.",
+    sheetNameNote: "Fiche publiée par le fabricant sous le nom « Shingle Saver ».",
+  },
+  details: [
+    {
+      slug: "nuroof-fortify",
+      metaTitle: "NuRoof Fortify: protection préventive des bardeaux d'asphalte",
+      metaDescription:
+        "Fiche du produit GoNano NuRoof Fortify, un scellant pénétrant transparent et respirant pour toitures de 0 à 5 ans: caractéristiques, application, garantie du fabricant.",
+      imageAlt: "Bidon de NuRoof Fortify",
+      tagline: "Le bouclier préventif des toitures récentes.",
+      intro:
+        "NuRoof Fortify est un scellant pénétrant à base de nanotechnologie, transparent et respirant, conçu pour protéger les bardeaux d'asphalte contre l'eau, le soleil et les cycles de gel et de dégel. Une fois appliquées, les nanoparticules se fixent à l'agrégat de surface et au bitume et créent un environnement hydrophobe.",
+      features: [
+        { title: "Imperméabilité", text: "Pénètre dans les bardeaux, réagit chimiquement dans les pores et les capillaires et crée une surface hydrophobe qui repousse l'eau." },
+        { title: "100 % respirant", text: "Ne forme pas de film: l'humidité peut s'échapper, le produit ne la retient pas." },
+        { title: "Adhérence renforcée", text: "Réagit avec le bitume et l'agrégat pour renforcer leur liaison." },
+        { title: "Oxydation et rayons UV", text: "Réduit la création de liaisons polaires qui accélèrent le vieillissement et protège contre les rayons UV." },
+        { title: "Gel et dégel", text: "Aide à prévenir la fissuration causée par l'eau qui s'infiltre." },
+        { title: "Croissance organique", text: "Résiste aux moisissures, aux lichens, au mildiou et à l'efflorescence." },
+        { title: "Finition mate naturelle", text: "Ne modifie pas l'apparence de la surface et reste stable à la lumière." },
+        { title: "Vieillissement réduit", text: "Réduction du vieillissement allant jusqu'à 68 % lors d'un essai comparatif bardeau non traité et traité, selon le fabricant." },
+      ],
+      specs: [
+        { label: "Contenu", value: "Bidon de 20 L (environ 5 gallons)" },
+        { label: "Âge de toiture visé", value: "0 à 5 ans" },
+        { label: "Base", value: "Solvant (excellente performance par temps froid)" },
+        { label: "Ingrédients actifs", value: "Organosilanes et organosiloxanes à l'échelle nanométrique" },
+        { label: "Apparence", value: "Transparent" },
+        { label: "Odeur", value: "Légère: solvant / pétrole" },
+        { label: "COV", value: "250 g/L au maximum" },
+        { label: "Point d'éclair", value: "Supérieur à 77 °C" },
+        { label: "Densité relative", value: "0,78 à 0,81 g/cm³" },
+        { label: "Couverture", value: "50 à 70 pi² par litre (1 couche)" },
+        { label: "Séchage", value: "4 à 6 h à 25 °C et 50 % d'humidité; hydrophobie complète en 7 jours" },
+      ],
+      steps: [
+        "Nettoyer la surface (lavage à pression au besoin): elle doit être saine et exempte d'huile, de graisse, de cire et d'anciens scellants.",
+        "Réparer les fissures et protéger les surfaces voisines: vitres, végétation, mobilier extérieur.",
+        "Respecter la météo: air et surface entre 1 °C et 35 °C, et aucune pluie prévue dans les 12 heures.",
+        "Faire un essai sur une petite surface et laisser sécher 5 à 7 jours avant de l'inspecter.",
+        "Bien mélanger sans diluer, puis appliquer au rouleau, au pinceau ou au pulvérisateur basse pression, à saturation, en répartissant les flaques jusqu'à pénétration.",
+      ],
+      applicationNote:
+        "Appliqué par un technicien formé. Ne prévient pas l'infiltration d'eau par des surfaces fissurées ou par des solins et un calfeutrage défectueux.",
+      environment: {
+        title: "Environnement",
+        text: "Fortify est une formule à base de solvant, choisie pour sa performance par temps froid. Nous ne la présentons donc pas comme un produit écologique. En revanche, prolonger la vie d'une toiture existante plutôt que de la remplacer réduit les débris envoyés au site d'enfouissement.",
+        points: [
+          "Moins de débris de remplacement lorsque la toiture est préservée",
+          "COV: 250 g/L au maximum (fiche technique)",
+          "Consignes de sécurité remises avant les travaux",
+        ],
+      },
+      warrantyProducts: ["NuRoof Fortify", "Fortify Elite"],
+      sheetLabel: "Fiche technique de NuRoof Fortify",
+    },
+    {
+      slug: "nuroof-revive",
+      metaTitle: "NuRoof Revive: rajeunissement des bardeaux d'asphalte",
+      metaDescription:
+        "Fiche du produit GoNano NuRoof Revive, un traitement à la bio-huile pour toitures de 5 à 20 ans: caractéristiques, application, environnement, garantie du fabricant.",
+      imageAlt: "Bidon de NuRoof Revive",
+      tagline: "Redonner de la souplesse aux toitures qui vieillissent.",
+      intro:
+        "NuRoof Revive est une solution de rajeunissement et de protection des toitures en bardeaux d'asphalte. Selon le fabricant, elle améliore la flexibilité et la résilience de l'asphalte, aide à prévenir la fissuration et prolonge la durée de vie de la toiture jusqu'à 10 ans.",
+      features: [
+        { title: "Durabilité", text: "Appuyé par de la recherche, il offre une durabilité accrue aux toitures en asphalte." },
+        { title: "Flexibilité", text: "Améliore la flexibilité et la résilience de l'asphalte pour une performance à long terme." },
+        { title: "Prévention des fissures", text: "Aide à prévenir la fissuration et renforce la résistance à l'eau." },
+        { title: "Durée de vie prolongée", text: "Prolonge la durée de vie des toitures en asphalte, jusqu'à 10 ans selon le fabricant." },
+        { title: "100 % perméable à l'air", text: "Ne forme pas de film: l'humidité peut s'échapper sans effet néfaste." },
+        { title: "Résistance à l'oxydation", text: "Réduit la création de liaisons polaires qui accélèrent le vieillissement." },
+        { title: "Croissance organique réduite", text: "Prévient les moisissures, le mildiou, les lichens et l'efflorescence." },
+        { title: "Finition naturelle", text: "Préserve l'apparence d'origine, sans dégradation due à la lumière." },
+      ],
+      specs: [
+        { label: "Contenu", value: "20 litres" },
+        { label: "Convient pour", value: "Toitures en bardeaux d'asphalte (5 à 20 ans)" },
+        { label: "Ingrédients actifs", value: "Nano-silice, bio-huile, agents adhésifs pour toiture" },
+        { label: "Apparence", value: "Clair et transparent" },
+        { label: "Odeur", value: "Légère: pétrole / bio-huile" },
+        { label: "Emballage", value: "20 L et 176 L (autres formats sur demande spéciale)" },
+        { label: "COV", value: "125 g/L au maximum" },
+        { label: "Point d'éclair", value: "Supérieur à 90 °C" },
+        { label: "Densité relative", value: "0,78 à 0,81 g/cm³" },
+        { label: "Couverture", value: "50 à 70 pi² par litre (1 couche)" },
+        { label: "Séchage", value: "4 à 6 h à 32 °C et 50 % d'humidité; résultats optimaux après 7 jours" },
+      ],
+      steps: [
+        "S'assurer que le substrat est propre et sans débris; réparer les fissures et les zones endommagées.",
+        "Protéger les surfaces voisines des éclaboussures.",
+        "Bien mélanger le produit avant et pendant l'application.",
+        "Appliquer au rouleau, au pinceau ou au pulvérisateur basse pression (non atomisant): 1 litre pour 50 à 70 pi², réparti uniformément jusqu'à pénétration.",
+        "Laisser sécher 4 à 6 heures; les résultats sont optimaux après 7 jours.",
+      ],
+      applicationNote: "Appliqué par un technicien formé, après inspection et réparations mineures.",
+      environment: {
+        title: "Environnement et durabilité",
+        text: "Revive contient une huile renouvelable et biodégradable, ce qui réduit l'utilisation d'additifs à base de pétrole (fiche technique du fabricant). Son contenu en COV est faible. Préserver une toiture existante réduit aussi les débris de remplacement.",
+        points: [
+          "Huile renouvelable et biodégradable",
+          "COV: 125 g/L au maximum (fiche technique)",
+          "Moins de débris de remplacement lorsque la toiture est préservée",
+        ],
+      },
+      warrantyProducts: ["NuRoof Revive", "Revive + Fortify"],
+      sheetLabel: "Fiche technique de NuRoof Revive",
+    },
+    {
+      slug: "nuroof-bio-boost",
+      metaTitle: "NuRoof Bio-Boost: protection économique des toitures de 10 ans et plus",
+      metaDescription:
+        "Fiche du produit GoNano NuRoof Bio-Boost, une protection économique à base de bio-huiles pour toitures de 10 ans et plus: caractéristiques, application, environnement, garantie.",
+      imageAlt: "Bidon de NuRoof Bio-Boost",
+      tagline: "Une protection de base, économique, pour les toitures de 10 ans et plus.",
+      intro:
+        "NuRoof Bio-Boost combine la nanotechnologie et des bio-huiles renouvelables. C'est une solution économique de protection et d'entretien qui, selon le fabricant, peut ajouter de 3 à 5 ans à la vie de la toiture lorsqu'elle est appliquée et entretenue correctement.",
+      features: [
+        { title: "Protection de base", text: "Offre une protection fondamentale grâce à une hydrorépellence à base de siloxane." },
+        { title: "Formule écologique", text: "Contient des ingrédients biosourcés renouvelables, ce qui réduit l'impact environnemental." },
+        { title: "Résistance à l'eau", text: "Aide à protéger contre les dommages causés par l'eau et réduit l'absorption dans les bardeaux." },
+        { title: "Durée de vie prolongée, modérément", text: "Peut ajouter de 3 à 5 ans à la vie du toit lorsqu'il est appliqué et entretenu correctement." },
+        { title: "Protection contre l'oxydation", text: "Ralentit le processus naturel d'oxydation des bardeaux." },
+        { title: "Finition naturelle", text: "Préserve l'apparence d'origine du toit, sans ajouter de brillance." },
+      ],
+      specs: [
+        { label: "Contenu", value: "20 litres (bidons d'environ 5 gallons)" },
+        { label: "Convient pour", value: "Toitures en bardeaux d'asphalte (10 ans et plus)" },
+        { label: "Ingrédients actifs", value: "Nanoparticule exclusive, bio-huile" },
+        { label: "Apparence", value: "Jaune clair à ambre" },
+        { label: "Odeur", value: "Légère: pétrole / bio-huile" },
+        { label: "COV", value: "250 g/L au maximum" },
+        { label: "Point d'éclair", value: "75 °C" },
+        { label: "Densité relative", value: "0,82 g/cm³" },
+        { label: "Couverture", value: "40 à 60 pi² par litre (1 couche)" },
+        { label: "Séchage", value: "6 à 8 h à 32 °C et 50 % d'humidité; efficacité complète après 7 jours" },
+      ],
+      steps: [
+        "S'assurer que la surface est propre et sans débris; réparer les fissures ou dommages visibles.",
+        "Protéger les surfaces voisines pour éviter les projections.",
+        "Bien agiter ou mélanger le produit avant et pendant l'application.",
+        "Appliquer au rouleau, au pinceau ou au pulvérisateur basse pression sans atomisation: 1 litre par 40 à 60 pi², puis étaler les flaques avec un balai ou un rouleau.",
+        "Laisser sécher 6 à 8 heures; l'efficacité est complète après 7 jours.",
+      ],
+      applicationNote: "Appliqué par un technicien formé, après inspection et réparations nécessaires.",
+      environment: {
+        title: "Environnement et durabilité",
+        text: "Bio-Boost utilise des bio-huiles renouvelables pour réduire l'utilisation de pétrole, une alternative plus écologique qui conserve les propriétés de protection de base (fiche technique du fabricant). Préserver une toiture existante réduit aussi les débris de remplacement.",
+        points: [
+          "Contenu biosourcé renouvelable (bio-huiles)",
+          "COV: 250 g/L au maximum (fiche technique)",
+          "Moins de débris de remplacement lorsque la toiture est préservée",
+        ],
+      },
+      warrantyProducts: ["NuRoof Boost", "Boost + Fortify"],
+      sheetLabel: "Fiche technique de NuRoof Bio-Boost",
+    },
+  ] as ProductDetail[],
 
   warranty: {
     title: "Garantie limitée du fabricant",

@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      // The hidden variation page must never be indexed.
+      { source: "/gohighlevel", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       {
         source: "/:path*",
         headers: [

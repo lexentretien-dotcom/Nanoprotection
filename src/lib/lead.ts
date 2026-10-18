@@ -39,7 +39,14 @@ export function makeLeadSchema(e: LeadErrors) {
     message: z.string().trim().max(2000).optional().default(""),
     consent: z.literal(true, { message: e.consent }),
     marketingConsent: z.boolean().optional().default(false),
-    source: z.enum(["contact", "assessment"]).default("contact"),
+    source: z.enum(["contact", "assessment", "widget"]).default("contact"),
+    /** Quote widget only: what the visitor is looking for, in their words (the label they clicked). */
+    service: z.string().trim().max(120).optional(),
+    /** Quote widget only: "verified" when the postal code matched a confirmed service area, else "pending". */
+    coverage: z.enum(["verified", "pending"]).optional(),
+    /** Quote widget only: a preference, never a confirmed appointment. ISO date or "asap". */
+    preferredDay: z.string().trim().max(20).optional(),
+    preferredWindow: z.string().trim().max(40).optional(),
     locale: z.enum(["fr", "en"]).default("fr"),
     assessment: z.record(z.string(), z.union([z.string(), z.array(z.string())])).optional(),
     attribution: z.record(z.string(), z.string()).optional(),
