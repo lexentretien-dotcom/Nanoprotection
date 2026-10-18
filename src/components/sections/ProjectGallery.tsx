@@ -1,29 +1,45 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { BeforeAfter } from "./BeforeAfter";
-import type { Project } from "@/content/projects";
+import { fmt } from "@/i18n/format";
+import { useI18n } from "@/i18n/provider";
 
-const labels: Record<string, string> = {
-  all: "Tous",
-  rajeunissement: "Rajeunissement",
-  "protection-preventive": "Protection préventive",
+/** Already localized by the server page. */
+export type GalleryProject = {
+  slug: string;
+  type: "rajeunissement" | "protection-preventive";
+  completedOn: string;
+  title: string;
+  location: string;
+  product: string;
+  roofCondition: string;
+  description: string;
+  before: { src: string; alt: string };
+  after: { src: string; alt: string };
 };
 
-export function ProjectGallery({ projects }: { projects: Project[] }) {
+export function ProjectGallery({ projects }: { projects: GalleryProject[] }) {
+  const { locale, ui } = useI18n();
+  const g = ui.gallery;
   const [filter, setFilter] = useState("all");
   const shown = projects.filter((p) => filter === "all" || p.type === filter);
+  const filters: [string, string][] = [
+    ["all", g.all],
+    ["rajeunissement", g.rajeunissement],
+    ["protection-preventive", g["protection-preventive"]],
+  ];
 
   return (
     <div>
-      <div role="group" aria-label="Filtrer les projets" className="flex flex-wrap gap-2">
-        {Object.entries(labels).map(([key, label]) => (
+      <div role="group" aria-label={g.filterLabel} className="flex flex-wrap gap-2">
+        {filters.map(([key, label]) => (
           <button
             key={key}
             type="button"
             aria-pressed={filter === key}
             onClick={() => setFilter(key)}
-            className={`rounded-full px-4 py-2 text-[15px] font-semibold ring-1 transition-colors duration-300 ${
+            className={`min-h-11 rounded-full px-4 text-[15px] font-semibold ring-1 transition-colors duration-300 active:scale-[0.97] active:duration-75 ${
               filter === key ? "bg-ink text-white ring-ink" : "bg-surface text-ink ring-ink/20 hover:ring-ink/45"
             }`}
           >
@@ -35,20 +51,22 @@ export function ProjectGallery({ projects }: { projects: Project[] }) {
         {shown.map((p) => (
           <li key={p.slug}>
             <article>
-              <div className="focus-within:ring-4 focus-within:ring-accent/40 rounded-[1.5rem]">
-                <BeforeAfter before={p.before.src} after={p.after.src} beforeAlt={p.before.alt} afterAlt={p.after.alt} />
-              </div>
+              <BeforeAfter before={p.before.src} after={p.after.src} beforeAlt={p.before.alt} afterAlt={p.after.alt} />
               <h3 className="mt-5 text-2xl font-bold">{p.title}</h3>
               <p className="mt-1 text-sm text-muted">
-                {p.location}, terminé le{" "}
-                <time dateTime={p.completedOn}>
-                  {new Date(p.completedOn).toLocaleDateString("fr-CA", { year: "numeric", month: "long", day: "numeric" })}
-                </time>
+                {fmt(g.completed, {
+                  location: p.location,
+                  date: new Date(p.completedOn).toLocaleDateString(locale === "fr" ? "fr-CA" : "en-CA", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }),
+                })}
               </p>
               <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-[15px]">
-                <dt className="font-semibold">Produit</dt>
+                <dt className="font-semibold">{g.product}</dt>
                 <dd className="text-muted">{p.product}</dd>
-                <dt className="font-semibold">État initial</dt>
+                <dt className="font-semibold">{g.condition}</dt>
                 <dd className="text-muted">{p.roofCondition}</dd>
               </dl>
               <p className="mt-4 text-muted">{p.description}</p>

@@ -1,4 +1,4 @@
-# Intégrations, déploiement et rapport de QA
+﻿# Intégrations, déploiement et rapport de QA
 
 Date du rapport: 9 octobre 2026. Environnement testé: Windows 11, Node 24 LTS, Next.js 16.4.
 
@@ -102,3 +102,36 @@ GoHighLevel, GA4/GTM, Search Console, hébergement, domaine.
 
 ### En attente de validation juridique ou technique
 Pages légales (Loi 25, LCAP, langue française), RBQ, usage de la marque GoNano, admissibilité Preferred Sources.
+
+---
+
+# Rapport d'achèvement, mise à jour du 18 octobre 2026
+
+## Implémenté et testé
+- TypeScript et ESLint sans erreur; build de production: 56 pages statiques (français et anglais).
+- **Routage des langues**: 18 pages publiques et leurs équivalents `/en` répondent 200; `/fr/...` redirige (308) vers l'adresse sans préfixe;
+  `/conseils` redirige (301) vers `/blogue`; URL inconnues (français et anglais) renvoient un vrai 404 avec la bonne langue.
+- Bouton de langue: conserve la page, l'URL française ne change pas, l'URL anglaise gagne `/en`; `lang`, titre et élément de menu actif suivent.
+- **Fuites de langue**: analyse automatique du texte visible de 20 pages dans chaque langue: aucun mot français sur les pages anglaises
+  ni mot anglais sur les pages françaises (le détecteur a été validé sur des pages connues).
+- **Mobile 375 px**: 38 pages (19 par langue): aucun débordement horizontal, un seul `h1` chacune. Deux défauts trouvés et corrigés
+  (en-tête trop large; bouton sans retour à la ligne dans la page Technologie).
+- **Évaluation en anglais**: parcours complet jusqu'au résultat; messages d'erreur anglais; validation à la sortie du champ; envoi vers un
+  **faux serveur GoHighLevel local** (pas le vrai): redirection vers `/en/merci`, étiquette `langue-en`, téléphone normalisé, note avec les
+  réponses lisibles. Quand le CRM était arrêté: message d'échec anglais avec téléphone et courriel de repli, sans fausse confirmation.
+- Menu mobile: focus déplacé à l'ouverture et rendu à la fermeture, Échap, `inert` quand fermé, fermeture symétrique.
+- Vérification visuelle (bureau): estimation, Technologie (photos, particules, deux tableaux), pied de page avec certifications.
+
+## Implémenté mais non testé
+- Intégration avec le **vrai** GoHighLevel; bannière de témoins et GA4/GTM (identifiants requis); bouton Preferred Sources activé.
+- Blogue: l'ajout d'un article par GitHub (fichier Markdown) n'a pas été testé sur Vercel; lecture locale testée.
+- Curseur avant/après et galerie (aucune photo réelle); témoignages (aucun réel).
+- Pages non inspectées visuellement: Réalisations, À propos, Zones, FAQ, liste du blogue, pages légales, à l'accueil anglais, et la page Produits en anglais. Inspectés: Produits (français, garantie), article de blogue (anglais), Contact (anglais).
+- Tablette, Safari/Firefox, lecteur d'écran, navigation clavier complète.
+
+## Non mesuré
+Lighthouse, Core Web Vitals, résultats enrichis Google.
+
+## Non construit
+Photos téléversables dans les formulaires, CMS visuel, mode sombre, pages locales par ville, planches de marque (images),
+**seconde page d'accueil cachée (point 12: en attente de vos explications)**.

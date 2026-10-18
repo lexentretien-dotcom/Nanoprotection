@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
     return [
       { source: "/produits", destination: "/nos-produits", permanent: true },
       { source: "/science", destination: "/technologie-gonano", permanent: true },
+      // "Conseils" became the blog.
+      { source: "/conseils", destination: "/blogue", permanent: true },
+      { source: "/conseils/:slug", destination: "/blogue/:slug", permanent: true },
+      { source: "/en/conseils", destination: "/en/blogue", permanent: true },
+      { source: "/en/conseils/:slug", destination: "/en/blogue/:slug", permanent: true },
     ];
   },
   async headers() {

@@ -1,3 +1,7 @@
+import type { Locale } from "@/i18n/config";
+
+type Localized = Record<Locale, string>;
+
 /**
  * Real, dated case studies only. Leave empty until genuine projects with
  * the client's permission and original photographs exist.
@@ -5,15 +9,16 @@
  */
 export type Project = {
   slug: string;
-  title: string;
   type: "rajeunissement" | "protection-preventive";
-  location: string;
-  completedOn: string; // ISO date, must match the photo date
+  /** ISO date, must match the photo date */
+  completedOn: string;
+  title: Localized;
+  location: Localized;
   product: string;
-  roofCondition: string;
-  description: string;
-  before: { src: string; alt: string };
-  after: { src: string; alt: string };
+  roofCondition: Localized;
+  description: Localized;
+  before: { src: string; alt: Localized };
+  after: { src: string; alt: Localized };
 };
 
 export const projects: Project[] = [];
@@ -21,10 +26,14 @@ export const projects: Project[] = [];
 export type Testimonial = {
   name: string;
   location: string;
+  /** The customer's own words, in the language they wrote them. */
   text: string;
   date: string;
+  /** Optional rating the customer actually gave (1 to 5). Never invent one. */
+  rating?: 1 | 2 | 3 | 4 | 5;
+  /** Must be true: written permission to publish. */
   consentOnFile: boolean;
 };
 
-/** Real customer testimonials with written permission only. */
+/** Real customer comments with written permission only. */
 export const testimonials: Testimonial[] = [];

@@ -1,7 +1,9 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useState } from "react";
+import { fmt } from "@/i18n/format";
+import { useI18n } from "@/i18n/provider";
 
 /**
  * Before/after comparison. The native range input gives mouse, touch and
@@ -19,6 +21,7 @@ export function BeforeAfter({
   beforeAlt: string;
   afterAlt: string;
 }) {
+  const { ui } = useI18n();
   const [pos, setPos] = useState(50);
 
   return (
@@ -27,8 +30,12 @@ export function BeforeAfter({
       <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
         <Image src={before} alt={beforeAlt} fill sizes="(min-width:1024px) 60vw, 100vw" className="object-cover" />
       </div>
-      <span className="absolute left-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-xs font-semibold text-white">Avant</span>
-      <span className="absolute right-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-xs font-semibold text-white">Après</span>
+      <span className="absolute left-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-xs font-semibold text-white">
+        {ui.beforeAfter.before}
+      </span>
+      <span className="absolute right-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-xs font-semibold text-white">
+        {ui.beforeAfter.after}
+      </span>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-y-0 w-0.5 bg-white shadow-[0_0_0_1px_rgb(11_18_48/0.3)]"
@@ -46,8 +53,8 @@ export function BeforeAfter({
         max={100}
         value={pos}
         onChange={(e) => setPos(Number(e.target.value))}
-        aria-label="Comparer avant et après: déplacer le curseur"
-        aria-valuetext={`${pos} % de l'image avant visible`}
+        aria-label={ui.beforeAfter.slider}
+        aria-valuetext={fmt(ui.beforeAfter.valueText, { n: pos })}
         className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
       />
     </div>

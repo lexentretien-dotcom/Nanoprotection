@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { interestLabels, interests, type LeadInput } from "@/lib/lead";
+import { interests, type LeadInput } from "@/lib/lead";
 import { business } from "@/config/business";
+import { useI18n } from "@/i18n/provider";
+import { localePath } from "@/i18n/config";
 import type { FormState } from "./useLeadSubmit";
 
 export const inputClass =
@@ -66,6 +68,7 @@ export function ContactFields({
   set,
   state,
   onStart,
+  onBlurField,
   showInterest = true,
   showMessage = true,
 }: {
@@ -73,9 +76,12 @@ export function ContactFields({
   set: (patch: Partial<ContactValues>) => void;
   state: FormState;
   onStart: () => void;
+  onBlurField: (key: string) => void;
   showInterest?: boolean;
   showMessage?: boolean;
 }) {
+  const { locale, ui } = useI18n();
+  const f = ui.form;
   const e = state.fieldErrors;
   const aria = (id: string) => ({
     "aria-invalid": e[id] ? true : undefined,
@@ -84,18 +90,19 @@ export function ContactFields({
 
   return (
     <div className="grid gap-5 sm:grid-cols-2" onFocusCapture={onStart}>
-      <Field id="name" label="Nom complet" error={e.name}>
+      <Field id="name" label={f.name} error={e.name}>
         <input
           id="name"
           name="name"
           autoComplete="name"
           value={values.name}
           onChange={(ev) => set({ name: ev.target.value })}
+          onBlur={() => onBlurField("name")}
           className={inputClass}
           {...aria("name")}
         />
       </Field>
-      <Field id="email" label="Courriel" error={e.email}>
+      <Field id="email" label={f.email} error={e.email}>
         <input
           id="email"
           name="email"
@@ -104,11 +111,12 @@ export function ContactFields({
           autoComplete="email"
           value={values.email}
           onChange={(ev) => set({ email: ev.target.value })}
+          onBlur={() => onBlurField("email")}
           className={inputClass}
           {...aria("email")}
         />
       </Field>
-      <Field id="phone" label="Téléphone" error={e.phone}>
+      <Field id="phone" label={f.phone} error={e.phone}>
         <input
           id="phone"
           name="phone"
@@ -117,23 +125,25 @@ export function ContactFields({
           autoComplete="tel"
           value={values.phone}
           onChange={(ev) => set({ phone: ev.target.value })}
+          onBlur={() => onBlurField("phone")}
           className={inputClass}
           {...aria("phone")}
         />
       </Field>
-      <Field id="postalCode" label="Code postal de la propriété" error={e.postalCode}>
+      <Field id="postalCode" label={f.postalCode} error={e.postalCode}>
         <input
           id="postalCode"
           name="postalCode"
           autoComplete="postal-code"
-          placeholder="G1K 3A5"
+          placeholder={f.postalPlaceholder}
           value={values.postalCode}
           onChange={(ev) => set({ postalCode: ev.target.value })}
+          onBlur={() => onBlurField("postalCode")}
           className={`${inputClass} uppercase`}
           {...aria("postalCode")}
         />
       </Field>
-      <Field id="city" label="Ville (facultatif)" error={e.city}>
+      <Field id="city" label={f.city} error={e.city}>
         <input
           id="city"
           name="city"
@@ -143,7 +153,7 @@ export function ContactFields({
           className={inputClass}
         />
       </Field>
-      <Field id="contactMethod" label="Comment préférez-vous être joint?">
+      <Field id="contactMethod" label={f.contactMethod}>
         <select
           id="contactMethod"
           name="contactMethod"
@@ -151,14 +161,14 @@ export function ContactFields({
           onChange={(ev) => set({ contactMethod: ev.target.value as "telephone" | "courriel" })}
           className={inputClass}
         >
-          <option value="telephone">Par téléphone</option>
-          <option value="courriel">Par courriel</option>
+          <option value="telephone">{f.byPhone}</option>
+          <option value="courriel">{f.byEmail}</option>
         </select>
       </Field>
 
       {showInterest && (
         <div className="sm:col-span-2">
-          <Field id="interest" label="Votre besoin">
+          <Field id="interest" label={f.interest}>
             <select
               id="interest"
               name="interest"
@@ -168,7 +178,7 @@ export function ContactFields({
             >
               {interests.map((i) => (
                 <option key={i} value={i}>
-                  {interestLabels[i]}
+                  {f.interests[i]}
                 </option>
               ))}
             </select>
@@ -178,7 +188,7 @@ export function ContactFields({
 
       {showMessage && (
         <div className="sm:col-span-2">
-          <Field id="message" label="Message (facultatif)" error={e.message} hint="Âge approximatif de la toiture, problèmes observés, etc.">
+          <Field id="message" label={f.message} error={e.message} hint={f.messageHint}>
             <textarea
               id="message"
               name="message"
@@ -194,7 +204,7 @@ export function ContactFields({
 
       {/* Honeypot: hidden from people and assistive tech. */}
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="website">Ne pas remplir</label>
+        <label htmlFor="website">Do not fill</label>
         <input
           id="website"
           name="website"
@@ -216,12 +226,14 @@ export function ContactFields({
             aria-describedby={e.consent ? "consent-error" : undefined}
           />
           <span>
-            J&apos;accepte que {business.displayName} utilise ces renseignements pour répondre à ma
-            demande, comme décrit dans la{" "}
-            <Link href="/confidentialite" className="font-medium text-accent underline underline-offset-4">
-              politique de confidentialité
+            {f.consentBefore}
+            <Link
+              href={localePath(locale, "/confidentialite")}
+              className="font-medium text-accent underline underline-offset-4"
+            >
+              {f.consentLink}
             </Link>
-            .
+            {f.consentAfter}
           </span>
         </label>
         {e.consent && (
@@ -236,10 +248,7 @@ export function ContactFields({
             onChange={(ev) => set({ marketingConsent: ev.target.checked })}
             className="mt-1 h-5 w-5 shrink-0 accent-[var(--accent)]"
           />
-          <span>
-            (Facultatif) J&apos;accepte de recevoir des conseils et des offres par courriel. Je peux me
-            désabonner en tout temps.
-          </span>
+          <span>{f.marketing}</span>
         </label>
       </div>
     </div>
@@ -247,7 +256,9 @@ export function ContactFields({
 }
 
 export function FormStatus({ state }: { state: FormState }) {
-  if (state.status !== "error") return null;
+  const { ui } = useI18n();
+  const f = ui.form.errors;
+  if (state.status !== "error" || !state.message) return null;
   return (
     <div
       role="alert"
@@ -256,11 +267,11 @@ export function FormStatus({ state }: { state: FormState }) {
       <p className="font-semibold text-danger">{state.message}</p>
       {state.fallback && (
         <p className="mt-2">
-          Vous pouvez aussi nous joindre directement au{" "}
+          {f.fallbackIntro}{" "}
           <a className="font-semibold underline underline-offset-4" href={`tel:${business.phone.href}`}>
             {business.phone.display}
           </a>{" "}
-          ou par courriel à{" "}
+          {f.fallbackOr}{" "}
           <a className="font-semibold underline underline-offset-4" href={`mailto:${business.email.value}`}>
             {business.email.value}
           </a>

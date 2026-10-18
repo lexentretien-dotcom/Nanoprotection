@@ -1,59 +1,70 @@
 # Informations et approbations requises
 
-Rien ci-dessous n'a été inventé. Chaque élément marqué « à confirmer » provient de l'ancien site
-(expertsnanoplus.com) ou n'existe pas encore, et reste visible comme tel sur le site de pré-production.
+Rien ci-dessous n'a été inventé. Ce qui est marqué « à confirmer » provient de l'ancien site ou n'existe pas encore.
 
-## 1. Données d'entreprise à confirmer (`src/config/business.ts`)
+## 1. Données d'entreprise
 
 | Élément | Valeur actuelle | Statut |
 |---|---|---|
-| Nom légal / nom d'affaires | Les Experts Nano Protection Toitures | À confirmer (enregistrement au REQ, NEQ) |
-| Licence RBQ | 1254-8794-00 (de l'ancien site) | **À vérifier sur le registre de la RBQ pour le nouveau nom.** N'est affichée en production que lorsque `verify: false` |
-| Assurance responsabilité | non publiée | Fournir les renseignements réels |
-| Relation avec GoNano / certification d'applicateur | « Applicateur GoNano » | Confirmer par écrit l'autorisation d'utiliser la marque et les noms de produits |
-| Téléphone / courriel / heures | 438 900-4886, service@expertsnanoplus.com, lun-sam 8 h-18 h | À confirmer pour la nouvelle marque |
-| Adresse | aucune (entreprise de service, pas de vitrine) | Choisir: adresse publique ou zone de service seulement (règles Google Business Profile) |
-| Régions desservies | Québec et environs, Saguenay-Lac-Saint-Jean, Grand Montréal | À confirmer. Retirer toute région non desservie |
-| Délai de réponse | non publié | L'ancien site promettait 24 h: ne l'afficher qu'après confirmation |
-| Garanties | langage conditionnel seulement | Fournir les documents officiels de garantie GoNano |
+| Téléphone | +1 (450) 328-9398 | Fourni par vous (18 oct. 2026) |
+| Courriel | Service@ExpertsNanoProtection.ca | Fourni par vous. **Vérifier que la boîte est active** (les formulaires y renvoient en cas de panne du CRM) |
+| Heures | Tous les jours, 8 h à 20 h | Fourni par vous |
+| Régions | Rive-Sud de Montréal, Saguenay-Lac-Saint-Jean, grande région de Sherbrooke | Fourni par vous. J'ai écrit « Nous desservons plusieurs régions du Québec » et non « l'ensemble du Québec », car trois régions sont listées |
+| Nom de domaine | `expertsnanoprotection.ca` (déduit du courriel) | **À confirmer.** Modifiable avec `NEXT_PUBLIC_SITE_URL`. Garder `expertsnanoplus.com`? |
+| Nom légal / NEQ | Les Experts Nano Protection Toitures | À confirmer (REQ) |
+| Licence RBQ | 1254-8794-00 (de l'ancien site) | **Affichée dans le pied de page avec le logo de la RBQ.** Vérifier sur le registre de la RBQ que ce numéro appartient bien à la nouvelle raison sociale et couvre les travaux offerts |
+| Assurance | non publiée | Fournir les renseignements réels |
+| Statut GoNano | « Revendeur et installateur autorisé » (d'après votre bandeau) | Garder la preuve écrite de l'autorisation d'utiliser la marque |
+| Adresse | aucune (service à domicile) | Choisir: publique ou zone de service seulement |
 
-## 2. Contenu réel à fournir
+## 2. Contenu à fournir
 
-- Logo vectoriel (SVG) ou PNG transparent de la nouvelle marque. Le logo fourni dans la conversation
-  n'existait que comme image; le site utilise la marque (maison et nœuds) du logo de l'ancien site, avec
-  le nom en texte réel. Le logo « Nano Plus » complet n'est **pas** utilisé (mauvais nom).
-- Photos originales: maisons, techniciens, inspections, application, vrais contenants GoNano
-  (avec permission du fabricant), projets terminés avec date.
-- Projets réels avant/après et témoignages avec autorisation écrite (`src/content/projects.ts`).
-- Membres de l'équipe vérifiés pour la page À propos.
-- Documentation du fabricant: fiches techniques, fiches de données de sécurité, conditions de garantie.
-- Prix réels si vous souhaitez activer l'estimateur (`pricing` dans `business.ts`). Désactivé par défaut.
-- Articles: auteur nommé, révision par un expert, sources crédibles ajoutées (`sources: []` est vide).
+- **Témoignages réels** avec autorisation écrite (`src/content/projects.ts`). La carte « Ce que disent nos clients » est
+  construite et se remplit toute seule; elle reste cachée en production tant qu'il n'y en a pas.
+  Les témoignages et les économies chiffrées de l'ancien site, et ceux de votre capture d'exemple, **ne sont pas repris**:
+  dites-moi s'ils sont réels et approuvés, et je les ajoute.
+- Photos originales (maisons, techniciens, application, projets datés) et projets avant/après.
+- Équipe vérifiée pour la page À propos.
+- Auteur et réviseur des articles du blogue (champ `author`), et sources crédibles.
 
-## 3. Accès et identifiants
+## 3. Éléments à valider auprès de GoNano
+
+- **Nom du produit « Bio-Boost »**: vos diapositives disent « Bio-Boost », mais le document de garantie dit « Boost » (traitement de
+  transition). J'écris « NuRoof Bio-Boost » avec la note « désigné Boost dans les conditions de garantie ». Confirmer le nom officiel.
+- **Tableau de performance**: chaque critère montre trois marques (✓✓✓, ✓✓✗, etc.). Je les ai affichées comme « niveaux sur 3 ».
+  **Confirmer la signification exacte de l'échelle.**
+- **Tableau des essais** (UL 2218 classe 3+, ASTM D3161 à 177 km/h, « prouvé scientifiquement », etc.): ce sont des affirmations du
+  fabricant, étiquetées comme telles. Demander les **rapports d'essai** et l'autorisation de les citer.
+- **Photos au microscope et schémas des particules**: confirmer l'autorisation de les publier (provenance GoNano).
+- **Garantie**: le PDF est lié tel quel (en français). L'anglais renvoie au même PDF, libellé « in French ». Une version anglaise officielle?
+- La présentation « Quick Start » (88 Mo, PDF) n'a pas pu être lue ici: son contenu n'est pas intégré. Dites-moi quelles pages utiliser.
+
+## 4. Engagements que vous avez demandés
+
+- « Réponse garantie en 24 h » apparaît sous les boutons de demande, dans la FAQ et la page de contact. C'est un engagement de
+  l'entreprise: assurez-vous de pouvoir le tenir.
+- « Aucuns frais, aucun engagement »: confirmé par vous. À garder cohérent avec la pratique réelle.
+- Non repris des sites de comparaison: « 10 000+ clients », « Économisez jusqu'à 80 % », « 15 ans de garantie max ».
+  Aucune statistique ni économie chiffrée n'est publiée sans source.
+
+## 5. Accès et identifiants
 
 | Service | Variable | Notes |
 |---|---|---|
-| GoHighLevel | `GHL_API_KEY`, `GHL_LOCATION_ID` | Jeton d'intégration privée avec la portée `contacts.write` |
-| GA4 | `NEXT_PUBLIC_GA_ID` | Facultatif |
-| Google Tag Manager | `NEXT_PUBLIC_GTM_ID` | Facultatif (a priorité sur GA4) |
+| GoHighLevel | `GHL_API_KEY`, `GHL_LOCATION_ID` | Jeton d'intégration privée, portée `contacts.write` |
+| GA4 / GTM | `NEXT_PUBLIC_GA_ID` / `NEXT_PUBLIC_GTM_ID` | Facultatif |
 | Google Search Console | vérification de domaine | Après le choix du domaine |
-| Hébergement | compte Vercel (ou équivalent) | Voir `docs/INTEGRATIONS-AND-QA.md` |
-| Domaine | à décider | Garder expertsnanoplus.com ou changer. Voir `docs/SEO-AND-MIGRATION.md` |
+| Hébergement | Vercel | Déjà utilisé pour l'aperçu |
 
-## 4. Validations juridiques et techniques
+## 6. Validations juridiques
 
-- Les pages Confidentialité, Conditions, Témoins et Mentions légales sont des **versions de travail**.
-  À faire valider par un juriste (Loi 25, LCAP/CASL, Charte de la langue française).
-- Désigner la personne responsable de la protection des renseignements personnels (obligatoire, Loi 25).
-- Confirmer la durée de conservation des données et les fournisseurs situés hors Québec.
-- Vérifier avec la RBQ si la licence couvre les travaux offerts.
-- Vérifier avec l'Office québécois de la langue française les exigences applicables à l'affichage et aux marques.
+Pages légales (français et anglais): versions de travail. À faire valider (Loi 25, LCAP, Charte de la langue française).
+Désigner la personne responsable des renseignements personnels. Confirmer la durée de conservation.
 
-## 5. Décisions requises de votre part
+## 7. Décisions à prendre
 
 1. Domaine de production et plan de migration.
-2. CMS: rester sur des fichiers éditables via GitHub, ou installer Decap CMS / Tina (nécessite OAuth GitHub).
-3. Version anglaise (`en-CA`): non construite. À décider.
-4. Téléversement de photos dans les formulaires: non construit (voir `INTEGRATIONS-AND-QA.md`).
+2. Blogue: les articles sont des fichiers Markdown (voir `content/blog/README.md`). Un éditeur visuel (Decap CMS ou Tina) est possible plus tard.
+3. Téléversement de photos dans les formulaires: non construit.
+4. **Seconde page d'accueil cachée (point 12 de votre liste): en attente de vos explications.**
 5. Autorisation de mise en ligne. Rien n'est publié ni remplacé sans votre accord explicite.

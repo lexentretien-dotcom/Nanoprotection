@@ -1,5 +1,6 @@
 import { Plus } from "@phosphor-icons/react/ssr";
-import type { FaqItem } from "@/content/faq";
+
+type FaqItem = { q: string; a: string };
 
 /**
  * Native <details> accordion: keyboard and screen-reader accessible,
@@ -10,7 +11,7 @@ export function FaqList({ items }: { items: FaqItem[] }) {
     <div className="divide-y divide-ink/10 rounded-[1.5rem] bg-surface ring-1 ring-ink/[0.07]">
       {items.map((item) => (
         <details key={item.q} className="group px-5 sm:px-7">
-          <summary className="flex cursor-pointer items-center justify-between gap-6 py-5 text-left font-display text-lg font-semibold tracking-tight">
+          <summary className="flex min-h-14 cursor-pointer items-center justify-between gap-6 py-4 text-left font-display text-lg font-semibold tracking-tight">
             {item.q}
             <Plus
               size={20}

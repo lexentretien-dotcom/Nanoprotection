@@ -1,11 +1,11 @@
 /**
- * Single source of truth for business information.
+ * Single source of truth for business information that does not depend on
+ * the language. Text shown to visitors lives in src/i18n.
  *
- * Every field marked `verify: true` was taken from the previous website
- * (expertsnanoplus.com) and has NOT been confirmed for the new brand.
- * Confirm each one before the site goes live. See docs/PENDING-INFO.md.
+ * Fields marked `verify: true` have not been confirmed for the new brand.
+ * See docs/PENDING-INFO.md.
  */
-const DEFAULT_SITE_URL = "https://expertsnanoplus.com";
+const DEFAULT_SITE_URL = "https://expertsnanoprotection.ca";
 
 /** An empty or malformed env value (common on hosting dashboards) must never break the build. */
 function resolveSiteUrl(raw: string | undefined) {
@@ -20,17 +20,20 @@ function resolveSiteUrl(raw: string | undefined) {
 
 export const business = {
   legalName: "Les Experts Nano Protection Toitures",
-  /** Name shown in the interface. */
   displayName: "Les Experts Nano Protection Toitures",
   shortName: "Nano Protection",
-  tagline: "Préservation de toiture au Québec",
 
   siteUrl: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
 
-  phone: { display: "438 900-4886", href: "+14389004886", verify: true },
-  email: { value: "service@expertsnanoplus.com", verify: true },
-  hours: "Du lundi au samedi, de 8 h à 18 h",
-  hoursVerify: true,
+  phone: { display: "+1 (450) 328-9398", href: "+14503289398" },
+  email: { value: "Service@ExpertsNanoProtection.ca" },
+
+  /** Open every day, 8:00 to 20:00. Used for structured data; the text shown is in the dictionaries. */
+  openingHours: {
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    opens: "08:00",
+    closes: "20:00",
+  },
 
   /** Service-area business: no public street address is published. */
   address: null as null | {
@@ -41,18 +44,17 @@ export const business = {
   },
 
   rbq: { number: "1254-8794-00", verify: true },
-  insured: { claim: null as null | string, verify: true },
-  goNanoRelationship: {
-    label: "Applicateur GoNano",
-    verify: true,
-  },
 
-  /** Regions to confirm. Only regions actually served should stay enabled. */
-  regions: [
-    { slug: "quebec", name: "Québec et environs", detail: "Québec, Lévis, Beauport, Charlesbourg, Sainte-Foy", enabled: true },
-    { slug: "saguenay", name: "Saguenay-Lac-Saint-Jean", detail: "Saguenay et environs", enabled: true },
-    { slug: "montreal", name: "Grand Montréal", detail: "Montréal, Rive-Sud, Rive-Nord", enabled: true },
-  ],
+  /** Slugs only; names and details are in the dictionaries. Remove a region that is not served. */
+  regions: ["rive-sud-montreal", "saguenay-lac-saint-jean", "sherbrooke"] as const,
+
+  assets: {
+    warrantyPdf: "/docs/garantie-officielle-gonano.pdf",
+    goNanoLogoDark: "/brand/gonano-logo-dark.png",
+    goNanoLogoLight: "/brand/gonano-logo-light.png",
+    resellerBanner: "/brand/Reseller banner GoNano_Image.png",
+    rbqLogo: "/brand/rbq.webp",
+  },
 
   /** Integrations, all optional and configured through environment variables. */
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
@@ -72,11 +74,7 @@ export const business = {
     perSqFtMax: 0,
   },
 
-  /** Primary call to action, reused everywhere (one label per intent). */
-  cta: {
-    label: "Obtenir mon évaluation gratuite",
-    href: "/estimation",
-  },
+  ctaPath: "/estimation",
 } as const;
 
-export type Business = typeof business;
+export type RegionSlug = (typeof business.regions)[number];

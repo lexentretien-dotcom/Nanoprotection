@@ -80,3 +80,16 @@ Redirections 301 déjà configurées (`next.config.ts`): `/produits` → `/nos-p
 4. Tester sur un environnement de pré-production non indexé (c'est l'état actuel).
 5. Vérifier HTTPS, hôte canonique unique, nouvelle sitemap soumise, propriété Search Console vérifiée.
 6. **Ne rien remplacer sur le site en ligne sans votre approbation explicite.**
+
+---
+
+## Mise à jour du 18 octobre 2026: version anglaise et blogue
+
+- **Langues**: français sans préfixe, anglais sous `/en`. `hreflang` fr-CA, en-CA et x-default (français) sur chaque page; canonique propre
+  à chaque langue; `<html lang>`, `og:locale` et JSON-LD adaptés. Le sitemap liste les deux langues avec leurs alternatives.
+- **Blogue**: « Conseils » devient « Blogue » (`/blogue`). Redirections 301: `/conseils` vers `/blogue`, `/conseils/:slug` vers `/blogue/:slug`, et
+  les équivalents sous `/en`. Un article n'a de `hreflang` que dans les langues où il existe.
+- **Domaine par défaut** pour les canoniques: `https://expertsnanoprotection.ca` (déduit du courriel). Modifiable avec `NEXT_PUBLIC_SITE_URL`.
+  Si vous gardez `expertsnanoplus.com`, changez cette variable avant la mise en ligne.
+- **Données structurées**: `openingHoursSpecification` (tous les jours, 8 h à 20 h) ajouté à l'entreprise; régions desservies mises à jour.
+- Les anciennes redirections `/produits` et `/science` sont conservées.

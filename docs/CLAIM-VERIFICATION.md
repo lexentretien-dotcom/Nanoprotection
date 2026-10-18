@@ -36,3 +36,25 @@ Règle: aucune affirmation n'est publiée sans document source. Les formulations
 - L'estimateur n'affiche aucun prix tant que `pricing.enabled` est `false`; lorsqu'activé, il affiche une fourchette
   étiquetée « indicative, pas une soumission ».
 - L'outil d'évaluation ne diagnostique pas à distance et le dit.
+
+---
+
+## Ajouts du 18 octobre 2026: données du fabricant publiées sur le site
+
+Ces éléments viennent de documents fournis par GoNano (diapositives, PDF de garantie). Ils sont **attribués au fabricant** sur chaque
+page et ne sont pas présentés comme des études indépendantes.
+
+| Contenu publié | Source | Statut |
+|---|---|---|
+| Périodes de garantie (3 à 20 ans) et conditions résumées | PDF « Conditions générales de la garantie limitée » | Résumé fidèle, non contractuel; lien vers le document officiel dans le pied de page |
+| Durée de vie ajoutée: Fortify 10 à 15 ans, Revive 5 à 10 ans, Bio-Boost 3 à 5 ans | Diapositive « Comparer la performance » | Affirmation du fabricant. Reste conditionnelle (« selon le fabricant ») |
+| Tableau de performance (niveaux 0 à 3) | Même diapositive | **Échelle à confirmer** avec GoNano |
+| Résultats d'essais (UL 2218, ASTM D3161: 97 contre 177 km/h, etc.) | Diapositive « Critères de test » | Affirmation du fabricant. **Demander les rapports d'essai** |
+| Photos au microscope, taille relative des particules | Documents « Avant, pendant, après » et « Particules GoNano » | Autorisation de publication à confirmer. Schéma reconstruit, indiqué « pas à l'échelle » |
+| « Réponse garantie en 24 h » | Votre demande | Engagement de l'entreprise, à pouvoir tenir |
+| « Installateur autorisé GoNano » | Votre bandeau « Authorized reseller & installer » | Conserver la preuve écrite |
+
+Non publié: « 10 000+ clients satisfaits », « Économisez jusqu'à 80 % », toute économie en dollars, tout témoignage non autorisé.
+
+Garde-fous conservés: le traitement n'est jamais présenté comme substitut à une réparation; le résumé de garantie rappelle les exclusions
+(grêle, dommages consécutifs, défauts préexistants) et que les droits du consommateur du Québec ne sont pas touchés.

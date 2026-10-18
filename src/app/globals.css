@@ -57,10 +57,27 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display), system-ui, sans-serif;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+  font-optical-sizing: auto;
   text-wrap: balance;
   color: var(--ink);
+}
+
+/* Tracking and leading are size-specific: tighter as type grows, never one value for all. */
+h1 {
+  letter-spacing: -0.032em;
+  line-height: 1.03;
+}
+h2 {
+  letter-spacing: -0.026em;
+  line-height: 1.07;
+}
+h3 {
+  letter-spacing: -0.018em;
+  line-height: 1.15;
+}
+h4 {
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
 p {
@@ -101,6 +118,142 @@ p {
     radial-gradient(circle at 50% 100%, transparent 58%, rgb(255 255 255 / 0.07) 59%, rgb(255 255 255 / 0.07) 61%, transparent 62%),
     linear-gradient(180deg, rgb(90 44 245 / 0.18), transparent 60%);
   background-size: 56px 32px, 100% 100%;
+}
+
+/*
+  Translucent functional layer (header). A bright top-edge and soft saturation
+  read as a material; heavier fallbacks for users who ask for less transparency
+  or more contrast.
+*/
+.material {
+  background: rgb(245 245 250 / 0.72);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: 0 1px 0 rgb(11 18 48 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.6);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .material {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  .material {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 1px 0 var(--ink);
+  }
+  :root {
+    --line: #565b78;
+    --muted: #3a3f5c;
+  }
+}
+
+/*
+  Mobile menu: the same path in and out (fade and rise 8px), heavier curve,
+  items stagger in on open only.
+*/
+.menu-panel {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.35s var(--ease-heavy),
+    transform 0.35s var(--ease-heavy),
+    visibility 0s linear 0.35s;
+}
+.menu-panel[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+.menu-panel[data-open="true"] .menu-item {
+  animation: menuIn 0.6s var(--ease-heavy) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel {
+    transform: none;
+    transition: opacity 0.15s linear, visibility 0s linear 0.15s;
+  }
+  .menu-panel[data-open="true"] .menu-item {
+    animation: none;
+  }
+}
+
+/* Blog article body (rendered from Markdown). */
+.prose-article {
+  color: var(--ink-soft);
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+.prose-article > * + * {
+  margin-top: 1.25rem;
+}
+.prose-article h2 {
+  margin-top: 2.5rem;
+  font-size: clamp(1.5rem, 3.4vw, 1.875rem);
+  font-weight: 700;
+}
+.prose-article h3 {
+  margin-top: 2rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+.prose-article a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.prose-article ul,
+.prose-article ol {
+  padding-left: 1.4rem;
+}
+.prose-article ul {
+  list-style: disc;
+}
+.prose-article ol {
+  list-style: decimal;
+}
+.prose-article li + li {
+  margin-top: 0.4rem;
+}
+.prose-article li::marker {
+  color: var(--accent);
+}
+.prose-article blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  color: var(--ink);
+}
+.prose-article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.prose-article th,
+.prose-article td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+}
+.prose-article img {
+  border-radius: 1.25rem;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Native accordion polish */

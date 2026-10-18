@@ -39,7 +39,7 @@ export function Reveal({
     <div
       ref={ref}
       data-visible={visible}
-      className={`reveal ${className}`}
+      className={`reveal min-w-0 ${className}`}
       style={{ ["--reveal-delay" as string]: `${delay}ms` }}
     >
       {children}

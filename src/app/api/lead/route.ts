@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
-import { leadSchema, type LeadResponse } from "@/lib/lead";
+import { makeLeadSchema, type LeadResponse } from "@/lib/lead";
 import { ghlConfigured, sendLeadToGhl } from "@/lib/ghl";
+import { getDict } from "@/i18n/dictionaries";
+import { isLocale } from "@/i18n/config";
 
 export const runtime = "nodejs";
 
@@ -33,21 +35,25 @@ export async function POST(req: Request) {
   const now = Date.now();
   const ip = clientIp(req);
 
-  const stamps = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  if (stamps.length >= MAX_HITS) {
-    return json({ ok: false, error: "Trop de tentatives. Réessayez dans quelques minutes." }, 429);
-  }
-  stamps.push(now);
-  hits.set(ip, stamps);
-
   let raw: unknown;
   try {
     raw = await req.json();
   } catch {
-    return json({ ok: false, error: "Requête invalide." }, 400);
+    return json({ ok: false, error: getDict("fr").ui.form.errors.badRequest }, 400);
   }
 
-  const parsed = leadSchema.safeParse(raw);
+  const requested = (raw as { locale?: string } | null)?.locale;
+  const locale = isLocale(requested) ? requested : "fr";
+  const errors = getDict(locale).ui.form.errors;
+
+  const stamps = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  if (stamps.length >= MAX_HITS) {
+    return json({ ok: false, error: errors.tooMany }, 429);
+  }
+  stamps.push(now);
+  hits.set(ip, stamps);
+
+  const parsed = makeLeadSchema(errors).safeParse(raw);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
@@ -56,7 +62,7 @@ export async function POST(req: Request) {
     }
     // A filled honeypot fails the schema; do not reveal that.
     if (fieldErrors.website) return json({ ok: true });
-    return json({ ok: false, error: "Veuillez corriger les champs indiqués.", fieldErrors }, 422);
+    return json({ ok: false, error: errors.generic, fieldErrors }, 422);
   }
   const lead = parsed.data;
 
@@ -71,10 +77,7 @@ export async function POST(req: Request) {
 
   if (!ghlConfigured()) {
     console.error("[lead] GHL_API_KEY / GHL_LOCATION_ID are not configured");
-    return json(
-      { ok: false, fallback: true, error: "Le service de demande est temporairement indisponible." },
-      503,
-    );
+    return json({ ok: false, fallback: true, error: errors.unavailable }, 503);
   }
 
   try {
@@ -83,9 +86,6 @@ export async function POST(req: Request) {
     return json({ ok: true });
   } catch (err) {
     console.error("[lead] CRM request failed:", err instanceof Error ? err.message : "unknown");
-    return json(
-      { ok: false, fallback: true, error: "Nous n'avons pas pu enregistrer votre demande." },
-      502,
-    );
+    return json({ ok: false, fallback: true, error: errors.notSaved }, 502);
   }
 }

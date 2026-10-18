@@ -4,6 +4,8 @@ import Link from "next/link";
 import Script from "next/script";
 import { useSyncExternalStore } from "react";
 import { CONSENT_KEY } from "@/lib/analytics";
+import { useI18n } from "@/i18n/provider";
+import { localePath } from "@/i18n/config";
 
 type Choice = "granted" | "denied" | null;
 
@@ -34,6 +36,7 @@ const getServerSnapshot = () => "pending";
  * as accepting. If no tracking ID is configured, no banner is shown at all.
  */
 export function Consent({ gaId, gtmId }: { gaId: string; gtmId: string }) {
+  const { locale, ui } = useI18n();
   const stored = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const ready = stored !== "pending";
   const choice: Choice = stored === "granted" || stored === "denied" ? stored : null;
@@ -65,35 +68,36 @@ export function Consent({ gaId, gtmId }: { gaId: string; gtmId: string }) {
       )}
 
       {choice === null && (
-        <div
-          role="dialog"
-          aria-label="Préférences de témoins"
+        <section
+          aria-label={ui.consent.label}
           className="fixed bottom-24 left-3 right-3 z-50 max-w-md rounded-[1.5rem] bg-surface p-5 shadow-[var(--shadow-soft)] ring-1 ring-ink/10 sm:left-6 lg:bottom-6"
         >
           <p className="text-[15px] text-ink">
-            Nous aimerions mesurer l&apos;utilisation du site pour l&apos;améliorer. Aucun témoin de
-            mesure n&apos;est activé sans votre accord.{" "}
-            <Link href="/temoins" className="font-medium text-accent underline underline-offset-4">
-              En savoir plus
+            {ui.consent.text}{" "}
+            <Link
+              href={localePath(locale, "/temoins")}
+              className="font-medium text-accent underline underline-offset-4"
+            >
+              {ui.consent.learnMore}
             </Link>
           </p>
           <div className="mt-4 flex gap-3">
             <button
               type="button"
               onClick={() => decide("denied")}
-              className="flex-1 rounded-full bg-surface px-4 py-2.5 text-[15px] font-semibold text-ink ring-1 ring-ink/20 hover:ring-ink/40"
+              className="min-h-11 flex-1 rounded-full bg-surface px-4 text-[15px] font-semibold text-ink ring-1 ring-ink/20 hover:ring-ink/40 active:scale-[0.97] active:duration-75"
             >
-              Refuser
+              {ui.consent.refuse}
             </button>
             <button
               type="button"
               onClick={() => decide("granted")}
-              className="flex-1 rounded-full bg-ink px-4 py-2.5 text-[15px] font-semibold text-white hover:bg-ink-soft"
+              className="min-h-11 flex-1 rounded-full bg-ink px-4 text-[15px] font-semibold text-white hover:bg-ink-soft active:scale-[0.97] active:duration-75"
             >
-              Accepter
+              {ui.consent.accept}
             </button>
           </div>
-        </div>
+        </section>
       )}
     </>
   );

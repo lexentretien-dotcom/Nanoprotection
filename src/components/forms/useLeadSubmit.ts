@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { leadSchema, type LeadInput, type LeadResponse } from "@/lib/lead";
+import { makeLeadSchema, type LeadInput, type LeadResponse } from "@/lib/lead";
 import { readAttribution, track } from "@/lib/analytics";
+import { useI18n } from "@/i18n/provider";
+import { localePath } from "@/i18n/config";
 
 export type FormState = {
   status: "idle" | "submitting" | "error";
@@ -20,6 +22,9 @@ const initial: FormState = { status: "idle", message: "", fieldErrors: {}, fallb
  */
 export function useLeadSubmit(source: "contact" | "assessment") {
   const router = useRouter();
+  const { locale, ui } = useI18n();
+  const errors = ui.form.errors;
+  const schema = useMemo(() => makeLeadSchema(errors), [errors]);
   const [state, setState] = useState<FormState>(initial);
   const renderedAt = useRef<number>(0);
   const started = useRef(false);
@@ -34,27 +39,35 @@ export function useLeadSubmit(source: "contact" | "assessment") {
     track("quote_form_start", { source });
   }
 
+  /** Validates one field when the visitor leaves it, so errors appear next to the field. */
+  function validateField(key: string, values: LeadInput) {
+    const result = schema.safeParse({ ...values, source, locale, elapsed: 3000 });
+    const issue = result.success ? undefined : result.error.issues.find((i) => i.path[0] === key);
+    setState((s) => {
+      const next = { ...s.fieldErrors };
+      if (issue) next[key] = issue.message;
+      else delete next[key];
+      return { ...s, fieldErrors: next };
+    });
+  }
+
   async function submit(values: LeadInput, extra?: Partial<LeadInput>) {
     const payload: LeadInput = {
       ...values,
       ...extra,
       source,
+      locale,
       attribution: readAttribution(),
       elapsed: Date.now() - renderedAt.current,
     };
 
-    const check = leadSchema.safeParse(payload);
+    const check = schema.safeParse(payload);
     if (!check.success) {
       const fieldErrors: Record<string, string> = {};
       for (const issue of check.error.issues) {
         fieldErrors[String(issue.path[0])] ??= issue.message;
       }
-      setState({
-        status: "error",
-        message: "Veuillez corriger les champs indiqués.",
-        fieldErrors,
-        fallback: false,
-      });
+      setState({ status: "error", message: errors.generic, fieldErrors, fallback: false });
       return false;
     }
 
@@ -68,7 +81,7 @@ export function useLeadSubmit(source: "contact" | "assessment") {
       const data = (await res.json()) as LeadResponse;
       if (data.ok) {
         track("quote_submit", { source });
-        router.push("/merci");
+        router.push(localePath(locale, "/merci"));
         return true;
       }
       setState({
@@ -78,15 +91,10 @@ export function useLeadSubmit(source: "contact" | "assessment") {
         fallback: Boolean(data.fallback),
       });
     } catch {
-      setState({
-        status: "error",
-        message: "Connexion impossible. Vérifiez votre réseau et réessayez.",
-        fieldErrors: {},
-        fallback: true,
-      });
+      setState({ status: "error", message: errors.network, fieldErrors: {}, fallback: true });
     }
     return false;
   }
 
-  return { state, submit, onStart };
+  return { state, submit, onStart, validateField };
 }

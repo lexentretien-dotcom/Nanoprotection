@@ -1,5 +1,6 @@
 import "server-only";
-import { interestLabels, type Lead } from "@/lib/lead";
+import { getDict } from "@/i18n/dictionaries";
+import type { Lead } from "@/lib/lead";
 
 /**
  * GoHighLevel (LeadConnector) integration. Server only: the token never
@@ -36,8 +37,11 @@ async function ghl(path: string, body: unknown) {
   return res.json() as Promise<Record<string, unknown>>;
 }
 
+/** CRM notes are always written in French, the team's working language. */
 function noteBody(lead: Lead) {
+  const interestLabels = getDict("fr").ui.form.interests;
   const lines = [
+    `Langue du visiteur: ${lead.locale === "en" ? "anglais" : "français"}`,
     `Source: formulaire ${lead.source === "assessment" ? "d'évaluation de toiture" : "de contact"}`,
     `Intérêt: ${interestLabels[lead.interest]}`,
     `Contact préféré: ${lead.contactMethod}`,
@@ -60,7 +64,12 @@ function noteBody(lead: Lead) {
 
 export async function sendLeadToGhl(lead: Lead) {
   const [firstName, ...rest] = lead.name.split(/\s+/);
-  const tags = ["site-web", lead.source === "assessment" ? "evaluation-toiture" : "contact", `interet-${lead.interest}`];
+  const tags = [
+    "site-web",
+    `langue-${lead.locale}`,
+    lead.source === "assessment" ? "evaluation-toiture" : "contact",
+    `interet-${lead.interest}`,
+  ];
   if (lead.marketingConsent) tags.push("consentement-marketing");
 
   const upsert = await ghl("/contacts/upsert", {
