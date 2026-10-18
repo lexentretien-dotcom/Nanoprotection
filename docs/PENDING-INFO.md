@@ -81,3 +81,12 @@ Désigner la personne responsable des renseignements personnels. Confirmer la du
 - **Options du widget** (béton/bois, membrane élastomère, réparation/remplacement): implémentées comme demandé; Wood Saver est discontinué et la réparation contredit le positionnement. À valider.
 - **Concrete Saver**: non inclus; recommandation dans le rapport final.
 - **Page `/gohighlevel`**: française seulement, non indexée, absente du sitemap.
+
+## 8. V4: points à confirmer
+
+- **Liens de profils**: Facebook, Google, Instagram, Yelp et LinkedIn sont en place (icônes violettes). Il reste le lien Google Maps (`googleMapsUrl`). Le lien Google fourni est un lien de partage (`share.google`); le lien direct de la fiche serait préférable pour le balisage.
+- **Réponse directe sur le secteur (widget)**: la ville est maintenant détectée à partir des 3 premiers caractères du code postal (service externe zippopotam.us, sans transmettre l'adresse ni le code complet). La réponse « Bonne nouvelle! » reste désactivée tant que les préfixes desservis ne sont pas approuvés (`docs/COVERAGE.md`). **Décision requise**: liste de préfixes, ou règle « tout le Québec sauf... ».
+- **Adresse**: le champ utilise l'autocomplétion du navigateur. Une vraie suggestion d'adresses exige un service (Google Places ou Canada Post AddressComplete) et une clé API.
+- **Questions sur l'état de la toiture**: non ajoutées (trop de friction). Seul l'âge approximatif est offert, en option.
+- **Garantie**: le bandeau indique maintenant « jusqu'à 20 ans ».
+- **Politique de confidentialité**: mentionner la recherche de ville par code postal partiel.

@@ -1,8 +1,8 @@
 /** All customer-facing text of the quote widget. French only, as requested. */
 export const widgetCopy = {
   progressLabel: "Progression de la demande",
-  stepOf: "Étape {n} sur 3",
-  steps: ["Secteur", "Service", "Coordonnées"],
+  stepOf: "Étape {n} sur 4",
+  steps: ["Secteur", "Service", "Toiture", "Coordonnées"],
   edit: "Modifier",
   back: "Retour",
   next: "Continuer",
@@ -20,6 +20,7 @@ export const widgetCopy = {
   s2: {
     good: "Bonne nouvelle! Nous desservons votre secteur.",
     pending: "Merci! Notre équipe confirmera avec vous si nous desservons votre secteur.",
+    cityFound: "Secteur détecté:",
     postalLabel: "Code postal",
     municipalityLabel: "Dans quelle municipalité se trouve la propriété?",
     municipalityHint: "Cela nous permet de confirmer la couverture de votre secteur.",
@@ -35,6 +36,28 @@ export const widgetCopy = {
       { key: "reparation", label: "Réparation ou remplacement de toiture", primary: false },
       { key: "inconnu", label: "Je ne sais pas encore", primary: false },
     ],
+  },
+
+  roof: {
+    title: "Parlez-nous de votre toiture",
+    subtitle: "Ces renseignements sont facultatifs et aident notre équipe à mieux vous répondre.",
+    address: "Adresse de la propriété",
+    addressPlaceholder: "Numéro et rue",
+    material: "Matériau de la toiture",
+    materialPlaceholder: "Choisir un matériau",
+    materials: [
+      "Bardeaux d'asphalte",
+      "Tôle ou métal",
+      "Membrane élastomère",
+      "Bardeaux de cèdre",
+      "Je ne sais pas",
+      "Autre",
+    ],
+    materialOther: "Précisez le matériau",
+    size: "Superficie approximative de la toiture",
+    sizes: ["Moins de 1 000 pi²", "1 000 à 2 000 pi²", "2 000 à 3 000 pi²", "Plus de 3 000 pi²", "Je ne sais pas"],
+    age: "Âge approximatif de la toiture",
+    ages: ["Moins de 5 ans", "5 à 10 ans", "10 à 20 ans", "Plus de 20 ans", "Je ne sais pas"],
   },
 
   s3: {
@@ -55,6 +78,7 @@ export const widgetCopy = {
     email: "Courriel",
     postal: "Code postal",
     service: "Service choisi",
+    city: "Municipalité",
     consentBefore: "J'accepte que Les Experts Nano Protection Toitures utilise ces renseignements pour répondre à ma demande, comme décrit dans la ",
     consentLink: "politique de confidentialité",
     consentAfter: ".",

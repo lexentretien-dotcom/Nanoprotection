@@ -61,7 +61,7 @@ export const site: Site = {
   stats: {
     items: [
       { prefix: "", value: "50,000+", label: "roofs treated in North America" },
-      { prefix: "Up to", value: "15 years", label: "of written manufacturer warranty" },
+      { prefix: "Up to", value: "20 years", label: "of written manufacturer warranty" },
       { prefix: "", value: "1 day", label: "to apply, with no tear-off" },
     ],
     source:
@@ -108,6 +108,7 @@ export const site: Site = {
       facebook: "Facebook",
       google: "Google (business profile)",
       instagram: "Instagram",
+      yelp: "Yelp",
       linkedin: "LinkedIn",
     },
     socialPlaceholder: "link to be configured",

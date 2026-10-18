@@ -12,7 +12,57 @@ import { useI18n } from "@/i18n/provider";
 import { localePath } from "@/i18n/config";
 import { widgetCopy as t } from "./copy";
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5;
+
+/** "Longueuil Southwest" -> "Longueuil": drop the sector suffix postal databases add. */
+function cleanPlace(name: string) {
+  return name
+    .replace(/\s*\(.*?\)\s*/g, " ")
+    .replace(/\s+(North|South|East|West|Northeast|Northwest|Southeast|Southwest|Central|Centre|Nord|Sud|Est|Ouest)(\s+.*)?$/i, "")
+    .trim();
+}
+
+/** Chips for a single choice. */
+function ChipGroup({
+  name,
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  name: string;
+  label: string;
+  options: readonly string[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <fieldset className="mt-5 min-w-0">
+      <legend className="text-[15px] font-semibold text-ink">{label}</legend>
+      <div className="mt-2 flex flex-wrap gap-2" role="radiogroup" aria-label={label}>
+        {options.map((o) => (
+          <label key={o}>
+            <input
+              type="radio"
+              name={name}
+              value={o}
+              checked={value === o}
+              onChange={() => onChange(o)}
+              className="peer sr-only"
+            />
+            <span
+              className={`inline-flex min-h-11 cursor-pointer items-center rounded-full px-4 text-sm font-semibold ring-1 transition-[background-color,transform] peer-focus-visible:ring-4 peer-focus-visible:ring-accent/40 ${press} ${
+                value === o ? "bg-ink text-white ring-ink" : "bg-surface text-ink ring-ink/20 hover:ring-ink/45"
+              }`}
+            >
+              {o}
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
 
 const press = "active:scale-[0.97] active:duration-75";
 const primaryBtn = `inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-[15px] font-semibold text-white shadow-[0_10px_30px_-12px_rgb(90_44_245/0.7)] transition-[transform,background-color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-strong disabled:cursor-wait disabled:opacity-70 ${press}`;
@@ -33,6 +83,12 @@ export function QuoteWidget() {
   const [postalError, setPostalError] = useState("");
   const [coverage, setCoverage] = useState<CoverageResult | null>(null);
   const [municipality, setMunicipality] = useState("");
+  const [cityStatus, setCityStatus] = useState<"loading" | "found" | "none">("none");
+  const [address, setAddress] = useState("");
+  const [material, setMaterial] = useState("");
+  const [materialOther, setMaterialOther] = useState("");
+  const [roofSize, setRoofSize] = useState("");
+  const [roofAge, setRoofAge] = useState("");
   const [municipalityError, setMunicipalityError] = useState("");
   const [service, setService] = useState("");
   const [serviceError, setServiceError] = useState("");
@@ -44,6 +100,7 @@ export function QuoteWidget() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const firstFocus = useRef(true);
   const pending = coverage?.status === "pending";
+  const askMunicipality = pending && cityStatus === "none";
   const normalised = normalisePostalCode(postal) ?? postal;
   const serviceLabel = t.s2.services.find((s) => s.key === service)?.label ?? "";
 
@@ -97,11 +154,28 @@ export function QuoteWidget() {
     setPostal(normalisePostalCode(postal) ?? postal);
     track("widget_coverage_check", { status: result.status });
     setStep(2);
+
+    // Look up the municipality from the first three characters only (never the full postal code).
+    setMunicipality("");
+    setCityStatus("loading");
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3000);
+    fetch(`https://api.zippopotam.us/ca/${result.fsa}`, { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => {
+        const place = cleanPlace(String(data?.places?.[0]?.["place name"] ?? ""));
+        if (place) {
+          setMunicipality(place);
+          setCityStatus("found");
+        } else setCityStatus("none");
+      })
+      .catch(() => setCityStatus("none"))
+      .finally(() => clearTimeout(timer));
   }
 
   function goToStep3() {
     let ok = true;
-    if (pending && !municipality.trim()) {
+    if (askMunicipality && !municipality.trim()) {
       setMunicipalityError(t.s2.municipalityError);
       ok = false;
     } else setMunicipalityError("");
@@ -112,12 +186,14 @@ export function QuoteWidget() {
     if (ok) setStep(3);
   }
 
+  const materialValue = material === "Autre" ? materialOther.trim() || "Autre" : material;
+
   const values = () => ({
     name: contact.name,
     email: contact.email,
     phone: contact.phone,
     postalCode: normalised,
-    city: pending ? municipality : "",
+    city: municipality,
     interest: "evaluation" as const,
     contactMethod: "telephone" as const,
     message: "",
@@ -134,8 +210,12 @@ export function QuoteWidget() {
       coverage: pending ? "pending" : "verified",
       preferredDay: day,
       preferredWindow: windowLabel,
+      address: address.trim() || undefined,
+      roofMaterial: materialValue || undefined,
+      roofSize: roofSize || undefined,
+      roofAge: roofAge || undefined,
     });
-    if (ok) setStep(4);
+    if (ok) setStep(5);
   }
 
   const e = state.fieldErrors;
@@ -143,7 +223,7 @@ export function QuoteWidget() {
     "aria-invalid": e[id] ? true : undefined,
     "aria-describedby": e[id] ? `w-${id}-error` : undefined,
   });
-  const progress = step === 4 ? 100 : ((step - 1) / 3) * 100 + 33.33;
+  const progress = step === 5 ? 100 : (step / 4) * 100;
   const prefLabel =
     day === "asap" ? t.s3.asap.toLowerCase() : (days.find((d) => d.value === day)?.label ?? day);
 
@@ -151,7 +231,7 @@ export function QuoteWidget() {
     <div className="rounded-[2rem] bg-ink/[0.05] p-1.5 ring-1 ring-ink/[0.08]">
       <div className="rounded-[calc(2rem-0.375rem)] bg-surface shadow-[var(--shadow-soft)]">
         {/* Animated progress */}
-        {step < 4 && (
+        {step < 5 && (
           <div className="px-5 pt-5 sm:px-8 sm:pt-7">
             <div className="flex items-center justify-between text-xs font-semibold text-muted">
               <span>{fmt(t.stepOf, { n: step })}</span>
@@ -161,7 +241,7 @@ export function QuoteWidget() {
               role="progressbar"
               aria-label={t.progressLabel}
               aria-valuemin={1}
-              aria-valuemax={3}
+              aria-valuemax={4}
               aria-valuenow={step}
               aria-valuetext={`${fmt(t.stepOf, { n: step })}: ${t.steps[step - 1]}`}
               className="mt-2 h-1.5 overflow-hidden rounded-full bg-ink/10"
@@ -235,6 +315,11 @@ export function QuoteWidget() {
                       <CheckCircle size={24} weight="fill" className="shrink-0 text-success" aria-hidden />
                     )}
                     <p className="min-w-0 flex-1 font-semibold text-ink">{pending ? t.s2.pending : t.s2.good}</p>
+                    {cityStatus === "found" && municipality && (
+                      <p className="text-sm text-muted">
+                        {t.s2.cityFound} <strong className="text-ink">{municipality}</strong>
+                      </p>
+                    )}
                     <p className="flex items-center gap-2 text-sm text-muted">
                       <span>
                         {t.s2.postalLabel}: <strong className="text-ink">{normalised}</strong>
@@ -250,7 +335,7 @@ export function QuoteWidget() {
                     </p>
                   </div>
 
-                  {pending && (
+                  {askMunicipality && (
                     <div className="mt-5">
                       <Field id="w-municipality" label={t.s2.municipalityLabel} error={municipalityError} hint={t.s2.municipalityHint}>
                         <input
@@ -335,8 +420,74 @@ export function QuoteWidget() {
                 </div>
               )}
 
-              {/* STEP 3: contact details and preferred time */}
+              {/* STEP 3: the roof (all optional) */}
               {step === 3 && (
+                <div>
+                  <h2 ref={headingRef} tabIndex={-1} className="text-xl font-bold outline-none sm:text-2xl">
+                    {t.roof.title}
+                  </h2>
+                  <p className="mt-1 text-[15px] text-muted">{t.roof.subtitle}</p>
+
+                  <div className="mt-5 grid gap-4 @lg:grid-cols-2">
+                    <div className="@lg:col-span-2">
+                      <Field id="w-address" label={t.roof.address}>
+                        <input
+                          id="w-address"
+                          name="street-address"
+                          autoComplete="address-line1"
+                          placeholder={t.roof.addressPlaceholder}
+                          value={address}
+                          onChange={(ev) => setAddress(ev.target.value)}
+                          className={inputClass}
+                        />
+                      </Field>
+                    </div>
+                    <Field id="w-material" label={t.roof.material}>
+                      <select
+                        id="w-material"
+                        value={material}
+                        onChange={(ev) => setMaterial(ev.target.value)}
+                        className={inputClass}
+                      >
+                        <option value="">{t.roof.materialPlaceholder}</option>
+                        {t.roof.materials.map((m) => (
+                          <option key={m} value={m}>
+                            {m}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    {material === "Autre" && (
+                      <Field id="w-material-other" label={t.roof.materialOther}>
+                        <input
+                          id="w-material-other"
+                          maxLength={80}
+                          value={materialOther}
+                          onChange={(ev) => setMaterialOther(ev.target.value)}
+                          className={inputClass}
+                        />
+                      </Field>
+                    )}
+                  </div>
+
+                  <ChipGroup name="w-size" label={t.roof.size} options={t.roof.sizes} value={roofSize} onChange={setRoofSize} />
+                  <ChipGroup name="w-age" label={t.roof.age} options={t.roof.ages} value={roofAge} onChange={setRoofAge} />
+
+                  <div className="mt-6 flex items-center justify-between gap-3">
+                    <button type="button" onClick={() => setStep(2)} className={ghostBtn}>
+                      <ArrowLeft size={18} weight="bold" aria-hidden />
+                      {t.back}
+                    </button>
+                    <button type="button" onClick={() => setStep(4)} className={primaryBtn}>
+                      {t.next}
+                      <ArrowRight size={18} weight="bold" aria-hidden />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: contact details and preferred time */}
+              {step === 4 && (
                 <form noValidate aria-busy={busy} onSubmit={send} className="relative">
                   <h2 ref={headingRef} tabIndex={-1} className="text-xl font-bold outline-none sm:text-2xl">
                     {t.s3.title}
@@ -495,7 +646,7 @@ export function QuoteWidget() {
                   )}
 
                   <div className="mt-5 flex items-center justify-between gap-3">
-                    <button type="button" onClick={() => setStep(2)} className={ghostBtn} disabled={busy}>
+                    <button type="button" onClick={() => setStep(3)} className={ghostBtn} disabled={busy}>
                       <ArrowLeft size={18} weight="bold" aria-hidden />
                       {t.back}
                     </button>
@@ -508,8 +659,8 @@ export function QuoteWidget() {
                 </form>
               )}
 
-              {/* STEP 4: honest confirmation (a request, not a booking) */}
-              {step === 4 && (
+              {/* STEP 5: honest confirmation (a request, not a booking) */}
+              {step === 5 && (
                 <div className="py-4 text-center" role="status">
                   <CheckCircle size={56} weight="fill" className="mx-auto text-success" aria-hidden />
                   <h2 ref={headingRef} tabIndex={-1} className="mt-4 text-2xl font-bold outline-none sm:text-3xl">

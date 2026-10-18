@@ -62,6 +62,10 @@ function noteBody(lead: Lead) {
           ? "dans une zone desservie (code postal reconnu)"
           : "À CONFIRMER par l'équipe (couverture non vérifiée automatiquement)"
       }`,
+      `Adresse: ${lead.address || "non fournie"}`,
+      `Matériau de toiture: ${lead.roofMaterial || "non précisé"}`,
+      `Superficie approximative: ${lead.roofSize || "non précisée"}`,
+      `Âge approximatif de la toiture: ${lead.roofAge || "non précisé"}`,
       `Préférence de rendez-vous (NON confirmée, aucune réservation faite): ${
         [lead.preferredDay === "asap" ? "dès que possible" : lead.preferredDay, lead.preferredWindow]
           .filter(Boolean)
@@ -104,6 +108,7 @@ export async function sendLeadToGhl(lead: Lead) {
     phone: `+1${lead.phone.replace(/\D/g, "").slice(-10)}`,
     postalCode: lead.postalCode.toUpperCase().replace(/\s|-/g, ""),
     city: lead.city || undefined,
+    address1: lead.address || undefined,
     country: "CA",
     source: lead.attribution?.utm_source ? `Site web / ${lead.attribution.utm_source}` : "Site web",
     tags,

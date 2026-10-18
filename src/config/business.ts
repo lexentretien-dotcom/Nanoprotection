@@ -55,10 +55,11 @@ export const business = {
    * structured data, which helps Google tie the website to the business profile.
    */
   socials: {
-    facebook: "",
-    google: "",
-    instagram: "",
-    linkedin: "",
+    facebook: "https://www.facebook.com/profile.php?id=61595395501044",
+    google: "https://share.google/MNGnnvDuJHNFfo6XC",
+    instagram: "https://www.instagram.com/nanoprotectiontoitures/",
+    yelp: "https://m.yelp.ca/biz/les-experts-nano-protection-montr%C3%A9al",
+    linkedin: "https://www.linkedin.com/company/les-experts-nano-protection-toitures",
   },
   /** Link to the Google Maps listing of the business profile (optional, used in structured data). */
   googleMapsUrl: "",

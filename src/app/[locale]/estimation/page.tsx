@@ -21,13 +21,13 @@ export default async function AssessmentPage({ params }: Props) {
     <>
       <Container className="py-12 sm:py-16">
         <Breadcrumbs locale={locale} items={[{ name: p.crumb, path: "/estimation" }]} />
-        {/* The survey keeps its own column; the side cards sit under the title on desktop, after the survey on mobile. */}
-        <div className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-12">
-          <h1 className="text-4xl font-extrabold sm:text-5xl lg:col-span-4 lg:row-start-1">{p.h1}</h1>
-          <div className="lg:col-span-8 lg:col-start-5 lg:row-span-2 lg:row-start-1">
+        <h1 className="mt-6 text-4xl font-extrabold sm:text-5xl">{p.h1}</h1>
+        {/* Survey and side cards start on the same line; the cards stack under the survey on mobile. */}
+        <div className="mt-8 grid items-start gap-x-10 gap-y-8 lg:grid-cols-12">
+          <div className="lg:col-span-8">
             <Assessment />
           </div>
-          <aside className="space-y-5 lg:col-span-4 lg:row-start-2">
+          <aside className="space-y-5 lg:col-span-4">
             <CoordinatesCard locale={locale} />
             <ServiceAreasCard locale={locale} />
             <TestimonialsCard locale={locale} />

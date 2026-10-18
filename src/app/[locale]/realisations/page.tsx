@@ -47,7 +47,7 @@ export default async function ProjectsPage({ params }: Props) {
         crumbs={[{ name: getDict(locale).ui.nav.items[3].label, path: "/realisations" }]}
       />
       {/* GoNano figures at the very top, as requested (no rating) */}
-      <StatsStrip locale={locale} link className="pt-12" />
+      <StatsStrip locale={locale} showSource={false} className="pt-12" />
 
       <Container className="py-20">
         {gallery.length > 0 ? (

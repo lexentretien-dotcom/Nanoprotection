@@ -8,10 +8,20 @@ import { business } from "@/config/business";
 import { fmt, getDict } from "@/i18n/dictionaries";
 import { localePath, type Locale } from "@/i18n/config";
 
+/** Phosphor has no Yelp mark, so a bold "Y" stands in for it. */
+function YelpMark({ size = 20 }: { size?: number; weight?: string; "aria-hidden"?: boolean }) {
+  return (
+    <span aria-hidden className="font-display font-extrabold leading-none" style={{ fontSize: size }}>
+      Y
+    </span>
+  );
+}
+
 const socialIcons = {
   facebook: FacebookLogo,
   google: GoogleLogo,
   instagram: InstagramLogo,
+  yelp: YelpMark,
   linkedin: LinkedinLogo,
 } as const;
 
@@ -67,7 +77,7 @@ export function Footer({ locale }: { locale: Locale }) {
                             target="_blank"
                             rel="noopener noreferrer me"
                             aria-label={label}
-                            className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 ring-1 ring-white/20 transition-[color,box-shadow,transform] duration-300 hover:text-white hover:ring-white/60 active:scale-95 active:duration-75"
+                            className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-white transition-[background-color,box-shadow,transform] duration-300 hover:bg-accent-strong hover:ring-2 hover:ring-white/40 active:scale-95 active:duration-75"
                           >
                             <Icon size={20} weight="regular" aria-hidden />
                           </a>

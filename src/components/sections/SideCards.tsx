@@ -7,7 +7,11 @@ import { fmt, getDict } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 
 function CardTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="font-display text-xs font-bold uppercase tracking-[0.14em] text-muted">{children}</h2>;
+  return (
+    <h2 className="border-b-2 border-accent pb-3 font-display text-xs font-bold uppercase tracking-[0.14em] text-ink">
+      {children}
+    </h2>
+  );
 }
 
 /** Phone, email and opening hours. */
@@ -17,7 +21,7 @@ export function CoordinatesCard({ locale }: { locale: Locale }) {
   return (
     <Bezel as="section" coreClassName="p-6">
       <CardTitle>{c.title}</CardTitle>
-      <ul className="mt-5 space-y-4">
+      <ul className="mt-6 space-y-4">
         <li className="flex items-center gap-4">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-tint text-accent-strong">
             <Phone size={20} weight="light" aria-hidden />
@@ -27,7 +31,7 @@ export function CoordinatesCard({ locale }: { locale: Locale }) {
             <TrackedLink
               href={`tel:${business.phone.href}`}
               event="phone_click"
-              className="inline-flex min-h-6 text-[17px] font-semibold text-ink underline-offset-4 hover:underline"
+              className="inline-flex min-h-6 text-[15px] font-semibold text-accent-strong underline-offset-4 hover:underline"
             >
               {business.phone.display}
             </TrackedLink>
@@ -42,7 +46,7 @@ export function CoordinatesCard({ locale }: { locale: Locale }) {
             <TrackedLink
               href={`mailto:${business.email.value}`}
               event="email_click"
-              className="inline-block min-h-6 text-[15px] font-semibold text-ink underline-offset-4 hover:underline"
+              className="inline-block min-h-6 text-[15px] font-semibold text-accent-strong underline-offset-4 hover:underline"
             >
               {business.email.value.split("@")[0]}@<wbr />
               {business.email.value.split("@")[1]}
@@ -55,7 +59,7 @@ export function CoordinatesCard({ locale }: { locale: Locale }) {
           </span>
           <div>
             <p className="text-xs text-muted">{c.hours}</p>
-            <p className="text-[15px] font-semibold text-ink">{hours}</p>
+            <p className="text-[15px] font-semibold text-accent-strong">{hours}</p>
           </div>
         </li>
       </ul>
@@ -68,7 +72,7 @@ export function ServiceAreasCard({ locale }: { locale: Locale }) {
   return (
     <Bezel as="section" coreClassName="p-6">
       <CardTitle>{regionsTitle}</CardTitle>
-      <p className="mt-4 text-[15px] text-muted">{regionsIntro}</p>
+      <p className="mt-5 text-[15px] text-muted">{regionsIntro}</p>
       <ul className="mt-3 space-y-2">
         {regions.map((r) => (
           <li key={r.slug} className="flex items-center gap-3 text-[15px] font-medium text-ink">
@@ -94,7 +98,7 @@ export function TestimonialsCard({ locale }: { locale: Locale }) {
     return (
       <Bezel as="section" coreClassName="p-6">
         <CardTitle>{t.title}</CardTitle>
-        <p className="mt-4 rounded-2xl border border-dashed border-ink/25 p-4 text-sm text-muted">
+        <p className="mt-5 rounded-2xl border border-dashed border-ink/25 p-4 text-sm text-muted">
           {t.stagingEmpty}
         </p>
       </Bezel>
@@ -104,7 +108,7 @@ export function TestimonialsCard({ locale }: { locale: Locale }) {
   return (
     <Bezel as="section" coreClassName="p-6">
       <CardTitle>{t.title}</CardTitle>
-      <ul className="mt-5 space-y-3">
+      <ul className="mt-6 space-y-3">
         {verified.slice(0, 3).map((x) => (
           <li key={x.name + x.date} className="rounded-2xl border-l-[3px] border-accent bg-paper p-4">
             {x.rating && (

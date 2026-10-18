@@ -59,7 +59,7 @@
   stats: {
     items: [
       { prefix: "", value: "50 000+", label: "toitures traitées en Amérique du Nord" },
-      { prefix: "Jusqu'à", value: "15 ans", label: "de garantie fabricant écrite" },
+      { prefix: "Jusqu'à", value: "20 ans", label: "de garantie fabricant écrite" },
       { prefix: "", value: "1 journée", label: "d'application, sans arrachage" },
     ],
     source:
@@ -106,6 +106,7 @@
       facebook: "Facebook",
       google: "Google (fiche d'entreprise)",
       instagram: "Instagram",
+      yelp: "Yelp",
       linkedin: "LinkedIn",
     },
     socialPlaceholder: "lien à configurer",

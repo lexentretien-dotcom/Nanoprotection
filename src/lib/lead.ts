@@ -47,6 +47,11 @@ export function makeLeadSchema(e: LeadErrors) {
     /** Quote widget only: a preference, never a confirmed appointment. ISO date or "asap". */
     preferredDay: z.string().trim().max(20).optional(),
     preferredWindow: z.string().trim().max(40).optional(),
+    /** Quote widget only: street address, roof material, approximate size and age (all optional). */
+    address: z.string().trim().max(200).optional(),
+    roofMaterial: z.string().trim().max(120).optional(),
+    roofSize: z.string().trim().max(60).optional(),
+    roofAge: z.string().trim().max(60).optional(),
     locale: z.enum(["fr", "en"]).default("fr"),
     assessment: z.record(z.string(), z.union([z.string(), z.array(z.string())])).optional(),
     attribution: z.record(z.string(), z.string()).optional(),

@@ -13,11 +13,14 @@ export function StatsStrip({
   locale,
   className = "",
   link = false,
+  showSource = true,
 }: {
   locale: Locale;
   className?: string;
   /** Show a link to the warranty details (used on the Realisations page). */
   link?: boolean;
+  /** Show the "GoNano data, limited warranty..." note under the figures. */
+  showSource?: boolean;
 }) {
   const { stats } = getDict(locale).site;
   return (
@@ -42,7 +45,7 @@ export function StatsStrip({
               </Reveal>
             ))}
           </dl>
-          <p className="mt-8 max-w-3xl text-sm text-muted">{stats.source}</p>
+          {showSource && <p className="mt-8 max-w-3xl text-sm text-muted">{stats.source}</p>}
           {link && (
             <Link
               href={`${localePath(locale, "/nos-produits")}#garantie`}

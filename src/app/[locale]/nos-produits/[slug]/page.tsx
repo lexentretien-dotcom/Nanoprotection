@@ -79,7 +79,7 @@ export default async function ProductPage({ params }: Props) {
             ]}
           />
           <div className="mt-8 grid items-center gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-6">
               <p className="font-display text-sm font-bold text-accent">{item.roofAge}</p>
               <h1 className="mt-3 text-4xl font-extrabold sm:text-5xl lg:text-6xl">{item.name}</h1>
               <p className="mt-4 font-display text-xl font-semibold text-ink-soft sm:text-2xl">{d.tagline}</p>
@@ -101,18 +101,16 @@ export default async function ProductPage({ params }: Props) {
               </div>
               <Reassurance text={ui.reassurance} />
             </div>
-            <div className="lg:col-span-5">
-              <Bezel coreClassName="p-6 sm:p-10">
-                <Image
-                  src={image}
-                  alt={d.imageAlt}
-                  width={500}
-                  height={375}
-                  priority
-                  sizes="(min-width:1024px) 36vw, 90vw"
-                  className="mx-auto h-auto w-full max-w-sm object-contain"
-                />
-              </Bezel>
+            <div className="lg:order-first lg:col-span-6">
+              <Image
+                src={image}
+                alt={d.imageAlt}
+                width={900}
+                height={900}
+                priority
+                sizes="(min-width:1024px) 46vw, 92vw"
+                className="mx-auto h-auto max-h-[34rem] w-full max-w-lg object-contain drop-shadow-[0_28px_40px_rgb(11,18,48,0.22)] lg:max-h-[40rem] lg:max-w-none"
+              />
             </div>
           </div>
         </Container>
