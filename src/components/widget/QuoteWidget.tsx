@@ -11,6 +11,7 @@ import { fmt } from "@/i18n/format";
 import { useI18n } from "@/i18n/provider";
 import { localePath } from "@/i18n/config";
 import { widgetCopy as t } from "./copy";
+import { AddressInput } from "./AddressInput";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -431,14 +432,14 @@ export function QuoteWidget() {
                   <div className="mt-5 grid gap-4 @lg:grid-cols-2">
                     <div className="@lg:col-span-2">
                       <Field id="w-address" label={t.roof.address}>
-                        <input
+                        <AddressInput
                           id="w-address"
-                          name="street-address"
-                          autoComplete="address-line1"
                           placeholder={t.roof.addressPlaceholder}
                           value={address}
-                          onChange={(ev) => setAddress(ev.target.value)}
-                          className={inputClass}
+                          onChange={setAddress}
+                          onPick={(a) => {
+                            if (a.city && cityStatus !== "found") setMunicipality(a.city);
+                          }}
                         />
                       </Field>
                     </div>

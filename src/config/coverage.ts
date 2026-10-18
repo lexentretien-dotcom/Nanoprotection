@@ -23,8 +23,10 @@ export type CoverageRegion = {
   fsa: string[];
 };
 
-export const coverage: { verified: boolean; regions: CoverageRegion[] } = {
-  verified: false,
+export const coverage: { verified: boolean; provinceWide: boolean; regions: CoverageRegion[] } = {
+  verified: true,
+  /** The owner confirmed that all of Québec is served: any G, H or J postal code is covered. */
+  provinceWide: true,
   regions: [
     { slug: "rive-sud-montreal", fsa: [] },
     { slug: "saguenay-lac-saint-jean", fsa: [] },
@@ -50,6 +52,7 @@ export function checkCoverage(raw: string): CoverageResult {
   if (!normalised) return { status: "invalid" };
   const fsa = normalised.slice(0, 3);
   if (!["G", "H", "J"].includes(fsa[0])) return { status: "outside-quebec", fsa };
+  if (coverage.verified && coverage.provinceWide) return { status: "covered", fsa, region: "quebec" };
   if (coverage.verified) {
     const hit = coverage.regions.find((r) => r.fsa.includes(fsa));
     if (hit) return { status: "covered", fsa, region: hit.slug };
